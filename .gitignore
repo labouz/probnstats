@@ -1,9 +1,12 @@
+# Version 2021-11-27
+
 # History files
 .Rhistory
 .Rapp.history
 
 # Session Data files
 .RData
+*.RData
 
 # User-specific files
 .Ruserdata
@@ -18,6 +21,7 @@
 /*.Rcheck/
 
 # RStudio files
+.Rproj.user
 .Rproj.user/
 
 # produced vignettes
@@ -37,3 +41,95 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Mac
+.DS_Store
+.Thumbs.db
+Thumbs.db
+
+# R projects
+*.Rproj
+
+# Directories
+docs/
+data/
+development/
+macros/
+output/
+sasdata/
+libs/
+
+# Exclude .Rmd output
+*.html
+**/figure-html/
+
+# Exclude Text
+*.txt
+*.Txt
+*.TXT
+
+# Exclude Excel
+*.xlsx
+*.xls
+
+# R data
+*.rds
+*.RDS
+*.Rds
+*.rda
+*.RDA
+*.Rda
+
+# csv data
+*.csv
+*.CSV
+*.Csv
+
+# sas data
+*.sas7bdat
+*.sas7bcat
+
+# SPSS data
+*.sav
+*.SAV
+*.Sav
+
+# SPSS output
+*.spv
+*.SPV
+*.Spv
+
+# STATA data
+*.dta
+*.DTA
+*.Dta
+
+# STATA log files
+*.log
+*.LOG
+*.Log
+*.smcl
+*.SMCL
+*.Smcl
+
+# VSC
+www/.vscode/
+
+# Bookdown book
+_book/
+_bookdown_files/
+
+# Binary - Powerpoint and iThoughtsX and PDF
+*.ppt
+*.pptx
+*.itmz
+*.pdf
+
+# R packages
+*.tar
+
+# Archives
+*.zip
+*.Zip
+*.ZIP
+

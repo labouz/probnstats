@@ -1,0 +1,166 @@
+---
+title: "Intro to Probability & Statistics"
+subtitle: "DSCI 501 - Winter 2022"  
+author: "Layla Bouzoubaa"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      ratio: 16:9
+      countIncrementalSlides: true
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, fig.height=3.5, fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = TRUE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_duo_accent(
+  primary_color = "#07294D",
+  secondary_color = "#FFC600",
+  inverse_header_color = "#FFFFFF"
+)
+```
+
+## Objectives:
+
+- Understand the principle of counting  
+- Learn how to find permutations  
+- Learn how to calculate combinations
+- Know how to compute independent probability  
+- Know how to compute conditional probability 
+- Understand the different types of variables  
+- Understand Bayes rule and how it can be useful 
+- Know the different types of variables  
+- Understand what expectation is  
+- Understand the importance of variance & standard variation  
+- Know the main types of distributions  
+- Understand the Central Limit Theorem  
+- Know how to calculate a confidence interval  
+- Know how to perform a hypothesis test
+- Understand the significance of a p-value  
+
+---
+class: inverse center middle
+
+## Counting
+
+---
+
+## Counting
+
+
+---
+## Permutations
+
+---
+## Combinations
+
+---
+class: inverse center middle
+
+## Probability
+
+---
+class: inverse center middle
+
+## Statistical Foundations
+
+
+---
+
+## Variables
+
+---
+
+## Expectation
+
+> This is a blockquote following a header.
+>
+> When something is important enough, you do it even if the odds are not in your favor.
+
+---
+
+## Variance
+
+#### R Code
+
+```{r eval=FALSE}
+ggplot(gapminder) +
+  aes(x = gdpPercap, y = lifeExp, size = pop, color = country) +
+  geom_point() +
+  facet_wrap(~year)
+```
+
+---
+
+## Standard Deviation
+
+```{r eval=FALSE}
+dplyr::starwars %>% dplyr::slice_sample(n = 4)
+```
+
+---
+
+## Distributions
+
+```{r message=TRUE, eval=requireNamespace("cli", quietly = TRUE)}
+cli::cli_alert_success("It worked!")
+```
+
+```{r message=TRUE}
+message("Just a friendly message")
+```
+
+```{r warning=TRUE}
+warning("This could be bad...")
+```
+
+
+```{r error=TRUE}
+stop("I hope you're sitting down for this")
+```
+
+
+---
+layout: true
+
+## Central Limit Theorem
+
+---
+exclude: `r if (requireNamespace("tibble", quietly=TRUE)) "false" else "true"`
+
+```{r eval=requireNamespace("tibble", quietly=TRUE)}
+tibble::as_tibble(mtcars)
+```
+
+---
+
+## Confidence Intervals
+
+```{r}
+knitr::kable(head(mtcars), format = 'html')
+```
+
+---
+
+## Hypthesis Testing
+
+```{r eval=requireNamespace("DT", quietly=TRUE)}
+DT::datatable(head(mtcars), fillContainer = FALSE, options = list(pageLength = 4))
+```
+
