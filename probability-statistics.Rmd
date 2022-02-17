@@ -32,12 +32,14 @@ library(xaringanthemer)
 style_duo_accent(
   primary_color = "#07294D",
   secondary_color = "#FFC600",
-  inverse_header_color = "#FFFFFF"
+  inverse_header_color = "#FFFFFF",
+  link_color = "#006699"
 )
 ```
 
 ## Objectives:
 
+- Understand probability spaces
 - Understand the principle of counting  
 - Learn how to find permutations  
 - Learn how to calculate combinations
@@ -45,7 +47,6 @@ style_duo_accent(
 - Know how to compute conditional probability 
 - Understand the different types of variables  
 - Understand Bayes rule and how it can be useful 
-- Know the different types of variables  
 - Understand what expectation is  
 - Understand the importance of variance & standard variation  
 - Know the main types of distributions  
@@ -57,15 +58,167 @@ style_duo_accent(
 ---
 class: inverse center middle
 
-## Counting
+## Probaility Spaces
+
+---
+## Probability Spaces
+
+* Probability space = aka Probability triple $(\Omega, \mathcal{F}, \mathcal{P})$, a mathematical construct that provides a formal model of a random process that contains the *sample space*, *event space* and the *probability function*   
+* Sample space $\Omega$ = A set of outcomes of an experiment - also can be referenced as *S*  
+.center[**Example 1:** Toss a coin. *S* = {*H,T*}. |*S*| = 2]  
+.center[**Example 2:** Toss *N* coins in succession.An outcome is the resulting sequence of *N* H's and T's.  
+*S* = $\underbrace{(H,T) \times\cdots\times(H,T)}_{\mathrm{Ntimes}}$  
+|*S*| = $2^N$]  
+* Event = a subset of the sample space  
+.center[**Example 3:** In the experiment where *N* = 4, there are 16 outcomes. The event 'there are at least two consecutive H's' is the set:  
+*E = {HHHH, HHHT, HHTH, HHTT, THHH, THHT, TTHH}*]
+
+---
+## Probability Spaces (cont.)
+
+* Discrete space = a *countable* set. Can be *finite* or *infinite*.  
+.center[**Example 4:** Flip a coin repeatedly until you get heads. Outcome is the number of tosses:  
+*S* = {1,2,3 $\dots$} = $Z^+$(set of positive integers)  
+*S* is a *discrete infinite* sample space] 
+
+* Continuous space = *infinite* number of items in the space  
+.center[**Example 5:** Given we have a 2x2 sample space, what are the odds we throw a dart and it lands on (1,1)?  
+![](images/cont-space.png)  
+There are an infinite number of spaces the dart could land on. The odds of it landing on *exactly* (1,1) is zero (see [Zeno's Paradox](https://blogs.unimelb.edu.au/sciencecommunication/2017/10/22/zenos-paradox-the-puzzle-that-keeps-on-giving/)). However, the continuous space for the dart hitting anywhere on the board is : $S = \{(x,y)\} \in R \times R: x \times y \le 2$]
+
+---
+## Probability Functions
+
+* Probability function $\mathcal{P}$ = the set function that returns an event's probability, a real number between 0 and 1. Therefore $P: \mathcal{P}(S) \to [0,1]$ where $\mathcal{P}(S)$ is the *power set* of *S*; the set of all subsets of *S*.
+
+* Probability Mass Function (PMF) = probability distribution; assigns a measure of likelihood, probability, of the outcome to each outcome in the sample space:
+.center[ $P:S \rightarrow [0,1]$ where [0,1] denotes the *closed interval* $\{x \in R:0\le x \le 1\}$ *and* that $\sum\limits_{s \in S} P(s)=1$  
+**Example 6:** For a coin toss, $P(0)=P(1)=\frac{1}{2}$. Likewise, for a fair die $P(i)=\frac{1}{6}$ for all $i \in \{1,2,3,4,5,6\}$. These are instances of *uniform distributions* on finite sample space, in which  
+$P(s) = \frac{1}{|S|}$ for all $s \in S$]
+* More specifically, $P$ can be extended from the PMF to:  
+.center[ $P(E)=\sum\limits_{s \in S} P(s)$
+]
+
+* In the case where the PMF is *uniform*:
+.center[This simplifies to: $P(E)=\frac{|E|}{|S|}$
+]
 
 ---
 
+# Basic Properties
+
+* $P(E) \le0$ for every event *E*  
+* $P(S)=1$
+* Events are *mutually exclusive*, or *disjoint*, when the probability of them co-occurring is 0. Therefore, if $E_i \cap E_j = \emptyset$  whenever $i \neq j$
+.center[ $P(E \cup F)=P(E)+P(F)$ The sum can be finite or infinite.
+] 
+
+* For any event $E, P(\overline{E})=1-P(E)$
+* Events $E_1$ and $E_2$ in a sample space are *independent* if $E_2$ is no  more or less likely to occur when $E_1$ occurs than when $E_1$ does not occur:
+.center[ $P(E_1 \cap E_2)=P(E_1) \cdot P(E_2)$
+]
+---
+
+## Probability Examples
+
+**Example 1:** Let $S=\{1,2,3,4,5,6\} \times \{1,2,3,4,5,6\}$, with uniform distribution, representing the usual roll of 2 dice. Let $E_1$ be the event 'the first die is odd', and let $E_2$ be the event 'the second die is even'. Then  
+.center[
+$E_1=\{1,3,5\}\times\{1,2,3,4,5,6\}$  
+$E_2=\{1,2,3,4,5,6\}\times\{2,4,6\}$  
+$E_1\cap E_2 = \{1,2,3\}\times \{4,5,6\}$  
+So, $|E_1|=|E_2|=18, |E_1 \cap E_2| = 9$, thus
+
+]
+---
+class: inverse center middle
+
 ## Counting
 
+---
+## Counting Principle
 
+> Rule of Product: If you have one event, A, and another event, B, then there are A x B ways to perform both actions.
+
+.center[*Events:* $a_1, a_2, \dots, a_n$  
+*Total number of ways:* $a_1 \times a_2 \times \cdots a_n$]
+
+- Example: I am packing for my vacation. I've selected 6 tops, 3 bottoms, 2 hats, and 2 pairs of shoes. How many different outfits can I make? 
+
+![](images/rop.png)
+--
+.center[**= 72 different outfits**]
+---
+## Tree Diagrams
+
+- A useful way to study the probabilities of events relating to experiments that take place in  stages and for which we are given the probabilities for the outcomes at each stage.
+
+*Example:* Dining at a restaurant.How many possible choices do you have for a complete meal?  
+![](images/menu-tree.png){width=20%}
+
+---
+## Representing Tree Diagram of Probabilities
+
+Suppose the restaurant in the previous example wants to find the probability a customer chooses meat given they know the percentages of other choices?
+--
+.pull-left[
+| Symbol      | Meaning                                   |
+|:------------|:------------------------------------------|
+| $\Omega$    | The sample space - the set of all possible outcomes|
+| $\omega$    | An outcome. A sample point in the sample space |
+| $\omega_j$  | Finite number of outcomes in the sample space |
+| $m(\omega_j)$| The *distribution function*. Each outcome $\omega_j$ is a assigned a nonnegative number $m(\omega_j)$ in such a way that $m(\omega_1)+m(\omega_2)+\cdots + m(\omega_j) = 1$ |
+]
+--
+.pull-right[
+![](images/menu-prob.png)]
+---
+## Representing Tree Diagram of Probabilities
+
+Suppose the restaurant in the previous example wants to find the probability a customer chooses meat given they know the percentages of other choices?
+
+.pull-left[
+| Symbol      | Meaning                                   |
+|:------------|:------------------------------------------|
+| $\Omega$    | The sample space - the set of all possible outcomes|
+| $\omega$    | An outcome. A sample point in the sample space |
+| $\omega_j$  | Finite number of outcomes in the sample space |
+| $m(\omega_j)$| The *distribution function*. Each outcome $\omega_j$ is a assigned a nonnegative number $m(\omega_j)$ in such a way that $m(\omega_1)+m(\omega_2)+\cdots + m(\omega_j) = 1$ |
+
+]
+
+.pull-right[
+![](images/menu-prob2.png)]
+--
+
+#### The probability a customer chooses meat is $m(\omega_1)+m(\omega_4)=.46$
+---
+## A Birthday Example
+
+.pull-left[
+*Problem:* How many people do we need to have in a room to make a favorable bet, *p(success) > 0.5*, that two people in the room will have the same birthday(no duplication of birthdays)?  
+* 365 = possible birthdays for each person(ignore leap year) 
+* *r* = number of people in a room
+
+To solve this, let's order the people from 1 to *r*. For this example, let's say we have 25 people, therefore a sequence of 25 birthdays. The number of possible birthdays for the first person is 365. What about for the second person?  
+* For each possible birthday in the sequence of person #1, there are 365 x 365 for #2 = $365^2$  
+* Person #3 = $365^3$  
+* $365^r$ possible sequences of birthdays.
+]
+.pull-right[
+Given we must find the number of these sequences that have no duplication, for example person #1 could have any of 365 days, then any of remaining 364 for person #2, until we make *r* choices, there will be $365-r+1$ possibilities. The total number of sequences with no duplication is: $365 \cdot 364 \cdot 363 \cdot ... \cdot (365-r+1)$  
+Assuming each sequence is likely:  
+$p_r = \frac{365 \cdot 364 \cdot 363 \cdot ... \cdot(365-r+1)} {365^r}$
+
+Let's see the top 20-25 people
+```
+f
+```
+]
 ---
 ## Permutations
+
+> The numbers of ways that a particular event can occur
+
 
 ---
 ## Combinations
@@ -137,7 +290,6 @@ stop("I hope you're sitting down for this")
 
 
 ---
-layout: true
 
 ## Central Limit Theorem
 
@@ -158,9 +310,12 @@ knitr::kable(head(mtcars), format = 'html')
 
 ---
 
-## Hypthesis Testing
+## Hypothesis Testing
 
 ```{r eval=requireNamespace("DT", quietly=TRUE)}
 DT::datatable(head(mtcars), fillContainer = FALSE, options = list(pageLength = 4))
 ```
 
+---
+
+## Resources
