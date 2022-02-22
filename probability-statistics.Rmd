@@ -294,34 +294,131 @@ $52 \times 51 = \frac{52!}{50!}$
 ## A Birthday Example
 
 .pull-left[
-*Problem:* How many people do we need to have in a room to make a favorable bet, *p(success) > 0.5*, that two people in the room will have the same birthday(no duplication of birthdays)?  
+*Problem:* Given there are 30 people in a room, what is the probability that there are 2 people with the same birthday?  
 * 365 = possible birthdays for each person(ignore leap year) 
-* *r* = number of people in a room
+* *k* = number of people in a room
 
-To solve this, let's order the people from 1 to *r*. For this example, let's say we have 25 people, therefore a sequence of 25 birthdays. The number of possible birthdays for the first person is 365. What about for the second person?  
-* For each possible birthday in the sequence of person #1, there are 365 x 365 for #2 = $365^2$  
-* Person #3 = $365^3$  
-* $365^r$ possible sequences of birthdays.
+To solve this, let's order the people from 1 to *k*. First, let's find the probability that all 30 people have different birthdays. The number of possible birthdays for the first person is 365. What about for the second person?  
+* For each possible birthday in the sequence, there is one less available date so, for #2 = 364
+* Person #3 = 363, etc.
+* What is the sample space? 
+$|S| = 365^30, |E| = 365 \times \cdots 336$
 ]
 .pull-right[
-Given we must find the number of these sequences that have no duplication, for example person #1 could have any of 365 days, then any of remaining 364 for person #2, until we make *r* choices, there will be $365-r+1$ possibilities. The total number of sequences with no duplication is: $365 \cdot 364 \cdot 363 \cdot ... \cdot (365-r+1)$  
-Assuming each sequence is likely:  
-$p_r = \frac{365 \cdot 364 \cdot 363 \cdot ... \cdot(365-r+1)} {365^r}$
+Therefore, the probability that all 30 people have different birthdays is 
 
-Let's see the top 20-25 people
-```
-f
-```
+.center[
+$P(E) = \frac{|E|}{|S|}= \frac{365}{365}\cdot \frac{364}{365}\cdots \frac{336}{365} = \frac{365 \cdot 364 \cdots (365-k+1)}{365^k}$
+]
+
+Then, the probability that there are two people with the same birthday is just the probability of the *complementary* event,
+
+.center[
+$1 -P(E) \approx 0.71$
+]
+
+This problem can also be solved the an *exponential approximation*...
 ]
 ---
-## Permutations
+## Exponential Approximation
 
-> The numbers of ways that a particular event can occur
+> The tangent line to the equation $y=e^x$ at $x=0$ is $y=1+x$. For small values of $x$, positive or negative, $1+x$ is a good approximation to $e^x$, and vice-versa
+
+</br>
+.center[![](images/exp.png)]
 
 
 ---
-## Combinations
 
+## Exponential Approximation - Birthday Edition
+
+Previously, we saw that the probability of no two people out of *k* having the same birthday as: $\frac{365 \cdot 364 \cdots (365-k+1)}{365^k}$
+
+This can be rewritten using exponential approximation:  
+.center[
+$(1-\frac{1}{365}) \cdot (1-\frac{2}{365}) \cdots (1-\frac{k-1}{365})$  
+$< e^\frac{-1}{365} \cdots e^-(k-1)/365$  
+$= e^-(1+2+\cdots+(k-1))/365$  
+$= e^-k(k-1)/(2\cdot 365)$  
+$< e^-(k-1)^2 / 730$
+]
+Note, that as the value of *k* gets larger, the probability gets smaller. Let's say we want to find at what point it falls below 0.1, meaning the probability that at least 2 people having the same birthday is 90%. To do this we can solve:
+
+.center[
+$e^-(k-1)^2 / 730 = 0.1$  
+Take reciprocals: $e^(k-1)^2 / 730 = 10$  
+Take natural log: $\frac{(k-1)^2}{730}=ln 10$  
+Thus, $k=1+\sqrt{730 \cdot ln10} \approx 41$ people
+]
+---
+
+## Birthday Edition - the Code:
+
+.pull-left[
+```
+#birthday plots
+
+from pylab import *
+
+def exact():
+    vals=[1]
+    prod =1
+    #No need to go higher than 70 people
+    for k in range(1,71):  
+        prod *= (365-k)/365
+        vals=concatenate((vals,[prod]))
+    plot(arange(1,72),1-vals,label='exact')
+    xlabel("Number of people.")
+```
+]
+.pull-right[
+```
+# compute and plot the same thing with 
+# the exponential approximation
+def approximate():
+  vals=array([1])
+  prod =1
+  for k in range(1,71):  
+      prod *= exp(-k/365)
+      vals=concatenate((vals,[prod]))
+  plot(arange(1,72),1-vals,
+    label='1-exp(-k(k-1)/(2X365))')
+  xlabel("Number of people.")
+
+def do_both():
+    exact()
+    title("Probability of 
+      coincidental birhday (exact).")
+    show()
+    approximate()
+    title("Proability of 
+    coincidental birthday (approximate).")
+    show()
+
+```
+]
+
+---
+## Binomial Coefficients
+
+> The number of k-element subsets of an n-element set (when $0 \le k \le n$), "n choose k";  
+.center[
+$\binom{n}{k}=\frac{n!}{(n-k)!k!}$ ]
+
+This formula works when n=0 or when k=0, k=n because 0! = 1.
+
+*Properties:*  
+* $\binom{n}{0}=\binom{n}{n}$ for all $n \ge 0$  
+* $\binom{n}{k}=\binom{n}{n-k}$ for all $0 \le k \le n$  
+* $\binom{n}{k}=\binom{n-1}{k-1}+\binom{n-1}{k}$ for all $1 \le k \le n$ 
+
+**Example.** Select 5 cards from a 52-card deck. What is the probability of getting a flush (all cards of the same suit)?
+
+* Given that the probability distribution is uniform, the probability of any event *E* is given by: $\frac{|E|}{\binom{52}{5}}$  
+* For the flush, each suit has 13 cards, so that there are $\binom{13}{5}$ flushes in that suit, thus:
+.center[
+$|E| = 4 \cdot \binom{13}{5}$
+]
 ---
 class: inverse center middle
 
