@@ -102,32 +102,110 @@ $P(s) = \frac{1}{|S|}$ for all $s \in S$]
 * In the case where the PMF is *uniform*:
 .center[This simplifies to: $P(E)=\frac{|E|}{|S|}$
 ]
-
 ---
 
-# Basic Properties
+## Probability Axioms 
 
-* $P(E) \le0$ for every event *E*  
-* $P(S)=1$
-* Events are *mutually exclusive*, or *disjoint*, when the probability of them co-occurring is 0. Therefore, if $E_i \cap E_j = \emptyset$  whenever $i \neq j$
-.center[ $P(E \cup F)=P(E)+P(F)$ The sum can be finite or infinite.
-] 
+* *De Morgan's Law* in the theory of sets is that the complement of the union of two sets is the intersection of the complements. Or vice versa: the complement of the intersection is the union of the complements:  
+.center[
+$(A \cup B)^c = A^cB^c$  
+$(AB)^c=A^c\cup B^c$  
+De Morgan's law is easy to verify using the *Karnaugh map* for two events:  
 
-* For any event $E, P(\overline{E})=1-P(E)$
-* Events $E_1$ and $E_2$ in a sample space are *independent* if $E_2$ is no  more or less likely to occur when $E_1$ occurs than when $E_1$ does not occur:
-.center[ $P(E_1 \cap E_2)=P(E_1) \cdot P(E_2)$
+![](images/karn-map.png)
 ]
 ---
 
-## Probability Examples
+## Probability Axioms (cont.)
 
-**Example 1:** Let $S=\{1,2,3,4,5,6\} \times \{1,2,3,4,5,6\}$, with uniform distribution, representing the usual roll of 2 dice. Let $E_1$ be the event 'the first die is odd', and let $E_2$ be the event 'the second die is even'. Then  
+1. $P(E) \ge0$ for every event *E*  
+2. $P(\Omega)=1$
+3. Events are *mutually exclusive*, or *disjoint*, when the probability of them co-occurring is 0. Therefore, if $E_i \cap E_j = \emptyset$  whenever $i \neq j$
+.center[
+$P(E \cup F)=P(E)+P(F)$ - The sum can be finite or infinite. 
+] 
+
+If Axioms 1-3 are satisfied then $P$ has other intuitive properties (note, A, B, E used interchangeably):  
+a. For any event $E, P(\overline{E})=1-P(E)$. That is because $E$ and $\overline{E}$ are mutually exclusive events and $\Omega=E \cap \overline{E}$. So Axioms 2 & 3 yield $P(E)+P(\overline{E}) = P(E \cap \overline{E}) = P(\Omega) =1$  
+b. $P(\emptyset)=0.$ That is because $\emptyset$ and $\Omega$ are complements of each other, so by Property a and Axiom 2, $P(\emptyset)=1-P(\Omega)=0$   
+c. If $A\subset B$ then $P(A) \le P(B)$. That is because $B=A \cup (A^cB)$ and $A$ & $A^cB$ are mutually exclusive, and $P(A^cB)\ge 0,$ so $P(A)\le P(A)+P(A^cB)=P(A\cup (A^cB))=P(B)$   
+d. Events $E_1$ and $E_2$ in a sample space are *independent* if $E_2$ is no  more or less likely to occur when $E_1$ occurs than when $E_1$ does not occur: $P(E_1 \cap E_2)=P(E_1) \cdot P(E_2)$  
+e. $P(A \cup B) = P(A) + P(B) - P(AB)$
+
+---
+
+## Probability Examples - Set of Dice
+.pull-left[
+**Example 1:** Let $S=\{1,2,3,4,5,6\} \times \{1,2,3,4,5,6\}$, with uniform distribution, representing the usual roll of 2 dice. Let $E_1$ be the event 'the first die is odd', and let $E_2$ be the event 'the second die is even'. Then:  
 .center[
 $E_1=\{1,3,5\}\times\{1,2,3,4,5,6\}$  
 $E_2=\{1,2,3,4,5,6\}\times\{2,4,6\}$  
 $E_1\cap E_2 = \{1,2,3\}\times \{4,5,6\}$  
-So, $|E_1|=|E_2|=18, |E_1 \cap E_2| = 9$, thus
+So, $|E_1|=|E_2|=18, |E_1 \cap E_2| = 9$, thus:  
+$P(E_1 \cap E_2)=9/36=1/4=1/2 \cdot 1/2 = P(E_1)\cdot P(E_2)$  
+So, the events are *independent*
+]
+]
+.pull-right[
+```
+# simulate N rolls of a pair of standard 
+# dice and find the number of times 
+# each roll occurs.
 
+from pylab import *
+
+def dice(N):
+    d={} #Python dictionary
+    for j in range(N):
+        #need tuples to index dicts
+        x=tuple(choice(arange(1,7),2)) 
+        if x in d:
+            d[x]+=1
+        else:
+            d[x]=1
+    for j in arange(1,7):
+        for k in arange(1,7):
+            y=(j,k)
+            print(y,':',d[y])
+```
+]
+---
+## Probability Examples - Beans
+
+.pull-left[
+**Example 2**: A jar contains 100 navy beans, 100 pinto, and 100 black beans. You reach in the jar and pull out 3 beans. What is the probability that the 3 beans are all different?  
+- First define the sample space: $S=\{1,...,300\}\times \{1,...,300\}\times \{1,...300\}$  
+This is equal to $300^3 = 2.7 \times 10^7$
+- Event $|E|$ is all the triples (*i,j,k*) of beans with different colors. The first bean has 300 possible values, the second 200, and the third 100. Therefore $P$ with replacement:  
+$|E|=300\times200\times100 =6 \times10^6$ 
+$P(E)=|E|/S = 6/27 = 0.2222$
+- Sampling *without* replacement changes the sample space:  
+$S = 300 \times 299 \times 298$  
+$P(E) = 6 \times 10^6 / (300 \times 299 \times 298) = 0.2245$
+]
+.pull-right[
+
+```
+# A bin contains b beans of each of 
+# three colors (0,1,2).
+# Pull out 3 beans (with or without 
+# replacement). What is the probability
+# that all three are different?
+
+def bean_sim(b,numtrials,repl=True):
+    # the jar
+    beans=[0]*b+[1]*b+[2]*b 
+    count=0
+    for j in range(numtrials):
+        sample=choice(beans,3,
+          replace=repl)
+        if (0 in sample) and 
+          (1 in sample) and 
+            (2 in sample):
+            count+=1
+    return count/numtrials
+
+```
 ]
 ---
 class: inverse center middle
@@ -153,7 +231,8 @@ class: inverse center middle
 - A useful way to study the probabilities of events relating to experiments that take place in  stages and for which we are given the probabilities for the outcomes at each stage.
 
 *Example:* Dining at a restaurant.How many possible choices do you have for a complete meal?  
-![](images/menu-tree.png){width=20%}
+</br>
+![](images/menu-tree.png)
 
 ---
 ## Representing Tree Diagram of Probabilities
@@ -161,6 +240,7 @@ class: inverse center middle
 Suppose the restaurant in the previous example wants to find the probability a customer chooses meat given they know the percentages of other choices?
 --
 .pull-left[
+
 | Symbol      | Meaning                                   |
 |:------------|:------------------------------------------|
 | $\Omega$    | The sample space - the set of all possible outcomes|
@@ -168,9 +248,12 @@ Suppose the restaurant in the previous example wants to find the probability a c
 | $\omega_j$  | Finite number of outcomes in the sample space |
 | $m(\omega_j)$| The *distribution function*. Each outcome $\omega_j$ is a assigned a nonnegative number $m(\omega_j)$ in such a way that $m(\omega_1)+m(\omega_2)+\cdots + m(\omega_j) = 1$ |
 ]
+
 --
+
 .pull-right[
 ![](images/menu-prob.png)]
+
 ---
 ## Representing Tree Diagram of Probabilities
 
@@ -191,6 +274,22 @@ Suppose the restaurant in the previous example wants to find the probability a c
 --
 
 #### The probability a customer chooses meat is $m(\omega_1)+m(\omega_4)=.46$
+---
+## Permutations
+
+> How many sequences of *k* elements of *{1,...,n}* have all *k* elements distinct?
+
+For example, with $n=5,k=3$, then (4,5,1) is such a sequence, but (1,5,1) is not. We have *n* choices for the first component of the sequence, and for each such choice, $n-1$ choices for the second, etc. So, by the above principle, the number of such sequences is:  
+.center[
+$n \cdot (n-1) \cdots (n-k+1) = \frac{n!}{(n-k)!}$
+]  
+
+This is the number of *k-permutations* of an n-element set. If $n = k$, then $(n-k)!=0!=1$, so the number of n-permutations of $\{1,...,n\} = n!$. In this case, we just call them *permutations* of $\{1,...,n\}$. If $n < k$, then the formula does not make sense - there are no *k-permutations* of $\{1,...,n\}$.
+
+**Example.** What is the number of sequences of 2 distinct cards drawn from a deck of cards (sampling without replacement)? 
+.center[
+$52 \times 51 = \frac{52!}{50!}$
+]
 ---
 ## A Birthday Example
 
@@ -319,3 +418,5 @@ DT::datatable(head(mtcars), fillContainer = FALSE, options = list(pageLength = 4
 ---
 
 ## Resources
+
+* Grinstead, C. M. & Snell, J. L. (1997). Introduction to probability. Providence, RI: American Mathematical Society. Book can be downloaded at: https://chance.dartmouth.edu/teaching_aids/books_articles/probability_book/book.html 
