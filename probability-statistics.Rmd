@@ -58,7 +58,7 @@ style_duo_accent(
 ---
 class: inverse center middle
 
-## Probaility Spaces
+## Probaility
 
 ---
 ## Probability Spaces
@@ -126,7 +126,7 @@ $P(E \cup F)=P(E)+P(F)$ - The sum can be finite or infinite.
 ] 
 
 If Axioms 1-3 are satisfied then $P$ has other intuitive properties (note, A, B, E used interchangeably):  
-a. For any event $E, P(\overline{E})=1-P(E)$. That is because $E$ and $\overline{E}$ are mutually exclusive events and $\Omega=E \cap \overline{E}$. So Axioms 2 & 3 yield $P(E)+P(\overline{E}) = P(E \cap \overline{E}) = P(\Omega) =1$  
+a. For any event $E, P(\bar{E})=1-P(E)$. That is because $E$ and $\bar{E}$ are mutually exclusive events and $\Omega=E \cap \bar{E}$. So Axioms 2 & 3 yield $P(E)+P(\bar{E}) = P(E \cap \bar{E}) = P(\Omega) =1$  
 b. $P(\emptyset)=0.$ That is because $\emptyset$ and $\Omega$ are complements of each other, so by Property a and Axiom 2, $P(\emptyset)=1-P(\Omega)=0$   
 c. If $A\subset B$ then $P(A) \le P(B)$. That is because $B=A \cup (A^cB)$ and $A$ & $A^cB$ are mutually exclusive, and $P(A^cB)\ge 0,$ so $P(A)\le P(A)+P(A^cB)=P(A\cup (A^cB))=P(B)$   
 d. Events $E_1$ and $E_2$ in a sample space are *independent* if $E_2$ is no  more or less likely to occur when $E_1$ occurs than when $E_1$ does not occur: $P(E_1 \cap E_2)=P(E_1) \cdot P(E_2)$  
@@ -337,16 +337,17 @@ Previously, we saw that the probability of no two people out of *k* having the s
 This can be rewritten using exponential approximation:  
 .center[
 $(1-\frac{1}{365}) \cdot (1-\frac{2}{365}) \cdots (1-\frac{k-1}{365})$  
-$< e^\frac{-1}{365} \cdots e^-(k-1)/365$  
-$= e^-(1+2+\cdots+(k-1))/365$  
-$= e^-k(k-1)/(2\cdot 365)$  
-$< e^-(k-1)^2 / 730$
+$< e^\frac{-1}{365} \cdots e^{-(k-1)/365}$  
+$= e^{-(1+2+\cdots+(k-1))/365}$  
+$= e^{-k(k-1)/(2\cdot 365)}$  
+$< e^{-(k-1)^2 / 730}$
 ]
+
 Note, that as the value of *k* gets larger, the probability gets smaller. Let's say we want to find at what point it falls below 0.1, meaning the probability that at least 2 people having the same birthday is 90%. To do this we can solve:
 
 .center[
-$e^-(k-1)^2 / 730 = 0.1$  
-Take reciprocals: $e^(k-1)^2 / 730 = 10$  
+$e^{-(k-1)^2 / 730} = 0.1$  
+Take reciprocals: $e^{(k-1)^2 / 730} = 10$  
 Take natural log: $\frac{(k-1)^2}{730}=ln 10$  
 Thus, $k=1+\sqrt{730 \cdot ln10} \approx 41$ people
 ]
@@ -420,19 +421,127 @@ This formula works when n=0 or when k=0, k=n because 0! = 1.
 $|E| = 4 \cdot \binom{13}{5}$
 ]
 ---
-class: inverse center middle
 
-## Probability
+## Binomial Theorem
 
+**Problem.** $(x+y)^4 = xxxx+xxxy+xxyx+\cdots+yyyx+yyyy$
+
+The right-hand is the sum of all sequences of 4 x's and y's. The coefficient of $x^{4-k} y^k$ is the number of such sequences containing exactly $k$ $y$'s Thus:  
+.center[
+$(x+y)^4 = \binom{4}{0}x^4 + \binom{4}{1}x^3y + \binom{4}{2}x^2y^2 + \binom{4}{3}xy^3 + \binom{4}{4}y^4$  
+$= x^4 +4x^3y +6x^2y^2+4xy^3+y^4$  
+Therefore, for any $n \ge 0$  
+$(x+y)^n = \sum\limits_{k=0}^n \binom{n}{k}x^k y^{n-k}$
+]
+
+**Example.** How many ways are there to arrange the letters of the word MISSISSIPPI?  
+- There are 11 letters and if all were different the answer would be 11!. But, in this problem, many of those 11! arrangements represent the same string so we need to treat the problem as a sequence of choices for each of the distinct letters. 4/11 positions to hold I, then for each choice 4/7 remaining positions to hold S, then 2/3 remaining positions to hold P. After that there is only 1 position remaining for M:  
+.center[
+$\binom{11}{4} \binom{7}{4} \binom{3}{2} = \frac{11!}{4!7!} \cdot \frac{7!}{4!3!} \cdot \frac{3!}{2!1!} = \frac{11!}{4!4!2!}$
+]
 ---
 class: inverse center middle
 
-## Statistical Foundations
+## Random Variables & PMFs
 
 
 ---
 
-## Variables
+## Discrete Random Variables
+
+> *Random variable X* assigns a number to the outcome of an experiment.
+
+**Example.** Coin Tosses - toss a fair coin 20 times:
+- $X_1$ = the number of heads tossed
+- $X_2$ = excess heads over tails (number of heads - number of tails)
+- $X_3$ = length of the longest run of consecutive heads or tails
+- $X_4$ = number of tosses until heads comes up
+
+These are all *random variables*.
+
+A random variable is said to be *discrete-type* if there is a finite set $u_1,...,u_n$ or a countable infinite set $u_1,u_2,...$ such that 
+
+.center[
+$P\{X \in \{u_1,u_2,...\}\} = 1$
+]
+
+The *probability mass function* (pmf) for a discrete-type random variable $X, p_X$, is defined by $p_X(u)=P\{X=u\}$ The above formula can be written as
+.center[
+$\sum\limits_{i}p_X(u_i) = 1$
+]
+---
+
+## Discrete Random Variables- Examples
+
+**Example.** Let *S* be the sum of the numbers showing on a pair of fair dice when they are rolled. Find the pmf of *S*.
+
+**Solution:** The underlying sample space is $\Omega = \{(i,j):1\le i \le 6, 1 \le j \le 6\}$, and it has 36 possible outcomes, each having a probability of $1/36$. The smallest value of *S* is 2 thus $\{S=2\}=\{(1,1)\}$. That is, there is only one outcome resulting in *S* = 2, so $p_S(2)=1/36$. Similarly, $\{S=3\}=\{(1,2),(2,1)\}$, so $p_S(3)=2/36$. And, $\{S=4\}=\{(1,3),(2,2),(3,1)\}$, so $p_S(4)=3/36$ and so forth. The pmf of *S* is shown below.  
+</br>
+
+.center[![](images/pmf-dice.png)]
+
+---
+
+## Independent Random Variables
+
+> Two random variables are said to be *independent* if for all $a,b \in \mathbf{R}$,  
+
+.center[
+$\{s \in S: X_1(s)=a\}, \{s \in S:X_2(s) =b\}$
+]
+
+are independent event. Recall this means that for all *a* and *b*,
+.center[
+$P((X_1=a) \land (X_2=b)) = P(X_1=a) \cdot P(X_2=b).$
+]
+
+This implies that for any *sets* *A* and *B* of values, 
+.center[
+$\{s \in S: X_1(s) \in A\},\{s \in S:X_2(s) \in B\}$
+]
+
+are also independent events. 
+
+.footnote[
+The symbol $\land$ can be read as "and".
+]
+---
+
+## Independent Random Variables - Example
+
+We naturally assume that the random variables that we denoted in the previous dice example, representing the individual outcomes of each of the two dice ( $Y_{2,1}$ and $Y_{2,2}$ ), are independent. We can compute the PMF of the sum $Y_2=Y_{2,1} + Y_{2,2}$. For example, the event $Y_2=8$ is the disjoint union of the events: 
+
+.center[
+$(Y_{2,1}=2) \land (Y_{2,1}=6)$  
+$(Y_{2,1}=3) \land (Y_{2,1}=5)$  
+$(Y_{2,1}=4) \land (Y_{2,1}=4)$  
+$(Y_{2,1}=5) \land (Y_{2,1}=3)$  
+$(Y_{2,1}=6) \land (Y_{2,1}=2)$
+]
+
+Independence implies that each of these events has probability $\frac{1}{6} \cdot \frac{1}{6} = \frac{1}{36}$, so $P_{Y_2}(8)= \frac{5}{36}$
+
+> If we know the distributions of two random variables, and we know that they are independent, then we can compute the distribution of their sum (and, likewise, their product, or any other operation performed on them).  
+
+Note: $Y_2$ and $Y_{2,2}$ are *not* independent. The sum of the two dice really does depend on what shows up on the second die! We can verify this formally: $P(Y_2=12)=\frac{1}{36}$. $P(Y_{2,2}=5)=\frac{1}{6}$, BUT $P((Y_2=12)\land(Y_{2,2}=5))=0\neq 1/36 \cdot 1/6$
+
+---
+
+## Cumulative Distribution Function (CDF)
+
+> The *cumulative distribution* function of a random variable $X$, denote $F_X$, is a function  
+.center[
+$F_X:\mathbf{R} \rightarrow [0,1]$  
+]
+defined by:  
+.center[
+$F_X(a) = P(X \le a)$.
+]
+
+For discrete random variables, we can compute the CDF as: $F_X(a)=\sum\limits_{b\le a}P_X(b)$  
+For discrete random variables, the CDF is a step function as shown below for the sum of two dice.  
+
+.center[![](images/cdf-dice.png)]
 
 ---
 
