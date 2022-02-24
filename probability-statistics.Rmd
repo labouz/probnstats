@@ -442,12 +442,12 @@ $\binom{11}{4} \binom{7}{4} \binom{3}{2} = \frac{11!}{4!7!} \cdot \frac{7!}{4!3!
 ---
 class: inverse center middle
 
-## Random Variables & PMFs
+## Discrete Random Variables, PMFs & CDFs
 
 
 ---
 
-## Discrete Random Variables
+## Discrete-type Random Variables
 
 > *Random variable X* assigns a number to the outcome of an experiment.
 
@@ -544,7 +544,173 @@ For discrete random variables, the CDF is a step function as shown below for the
 .center[![](images/cdf-dice.png)]
 
 ---
+## Simulating the roll of 2 dice - code
 
+.pull-left[
+```
+# Compute probabilites for the roll of 2
+# dice. The value returned is an array of
+# the cardinality of the frequencies of
+# the events X=i for i from 2 through 12.
+
+from pylab import *
+
+def dice_frequencies():
+    #generate the sample space
+    s=[(i,j) for i in range(1,7) 
+      for j in range(1,7)]
+    t=[sum(pair) for pair in s]
+    h=histogram(t,bins=arange(1.5,13,1))
+    return h[0]
+```
+]
+
+.pull-right[
+```
+# Use the cumulative distribution
+# function to simulate 100,000 samples 
+# from this distribution.  Then obtain a
+# histogram of the relative frequencies
+# and plot them side by side with the
+# theoretically derived probabilities.
+def display():
+    y=dice_frequencies()/36
+    z=cumsum(y)
+    stem(arange(2,13),y,label='computed',
+      linefmt='r-',markerfmt='k.')
+    samples=[2+searchsorted(z,random()) 
+      for j in range(100000)]
+    h=histogram(samples,
+      bins=arange(1.5,13,1))
+    stem(arange(2.2,13.2,1),h[0]/100000,
+      label='simulated',linefmt='k-',
+        markerfmt='r.')
+    title('PMF of sum of two dice')
+    legend(loc='upper right')
+    show()
+```
+
+]
+---
+class: inverse center middle
+## Important Discrete Random Variables
+
+
+---
+
+## Bernoulli Distribution
+
+> A random variable $X$ is said to have the *Bernoulli distribution* with parameter $p$, where $0 \le p \le1$, if $P(X = 1) = p$ and $P(X = 0) = 1-p$
+
+Note: There is not one Bernoulli distribution - you get a different PMF for every value of a parameter $p$.
+
+**Example.** Flip a biased coin with heads probability $P$, and set $X=1$ if the results is heads and $X=0$ otherwise. 
+
+#### Bernoulli Trials
+
+The principal use of the binomial coefficients will occur in the study of one of the important chance processes called *Bernoulli trials*. Bernoulli trials process is a sequence of $n$ chance experiments such that: 
+.pull-left[
+1. Each experiment has two possible outcomes, which we may call success and failure  
+2. The probability $p$ of success on each experiment is the same for each experiment, and this probability is not affected by any knowledge of previous outcomes. The probability $p$ of failure is given by $q = 1 − p$.
+]
+.pull-right[
+.center[![](images/bernoulli-tree.png)]
+]
+---
+
+## Binomial Distribution
+
+> Suppose $n$ independent Bernoulli trials are conducted, each resulting in a 1 with probability $p$ and a 0 with probability $1-p$. Let X denote the total number of 1s occurring in the $n$ trials. Any particular outcome with $k$ ones and $n-k$ zeros has the probability $p^k(1-p)^{n-k}$. Since there are $\binom{n}{k}$ possible outcomes, we find the pmf of $X$ is
+.center[
+$P_X(k)=\binom{n}{k}p^k(1-p)^{n-k}$
+]
+
+**Example.** The number of heads on $n$ successive tosses of a biased coin with heads probability $p$.
+
+The distribution of $X$ is called the *binomial distribution* with parameters $n$ and $p$
+
+.center[![](images/binom-pmf.png)]
+---
+
+## Geometric Distribution
+
+> There is a single parameter $0 \le p \le 1$. If $k$ is a positive integer, then  
+.center[
+$P_X(k)=(1-p)^{k-1}p$
+]
+
+**Example.** $X$ is the number of flips of a biased coin with heads probability $p$ until heads appears. For instance, $X=1$ if the first toss is heads, $X=3$ if the first two are tails and the third is heads. Note that this has a nonzero value at all posisive integers $k$.
+
+.center[
+![](images/geom-dist.png)
+]
+---
+
+## Poisson Distribution
+
+> Let $\lambda > 0$. We set 
+.center[
+$P(X=k)= \frac{\lambda^k}{k!} \cdot e^{-\lambda}$ for $k \ge 0$
+]
+
+By this definition, the first 4 terms of this PMF are: $p(0)=e^{-\lambda}$, $p(1)=\lambda e^{-\lambda}$, $p(2)=\frac{\lambda^2}{2} e^{-\lambda}$, $p(3)=\frac{\lambda^3}{6} e^{-\lambda}$.  
+The Poisson distribution arises frequently in practice, because it is a good approximation for a binomial distribution with parameters $n$ and $p$, when n is very large, $p$ is very small, and $\lambda = np$. Some examples in which such binomial distributions occur are:  
+* Incoming phone calls in a fixed time interval: $n$ is the number of people with cell phones within the access region of one base station, and $p$ is the probability that a given such person will make a call within the next minute.  
+* Misspelled words in a document: $n$ is the number of words in a document and $p$ is the probability that a given word is misspelled.
+
+**Example.** Suppose 500 shots are fired at a target. It is known that only about one in one hundred shots hit the bulls-eye. What is the probability of getting 3 or more bulls-eyes? To solve this, we compute the complementary (0,1,or 2), In the Poisson approximation this is given by: $e^{-\lambda}(1+\lambda+\lambda^2/2) = 18.5e^{-5} \approx0.125$. There for the probability of at least 3 bulls-eyes is about 0.875
+---
+
+## Expected value of a random variable
+
+> $E(X)$ denotes the *expected value*, or *expectation*, or *mean* of the random variable X. The definition is just the weighted average of the values of X, where the weights are the probabilities:  
+.center[
+$E(X)=\sum\limits_{a} a \cdot P_X(a)$
+]
+
+####Simple Examples
+
+.pull-left[
+
+1. A single die: Here, $P_X(i) = 1/6$ for $i=1,...,6$.
+So, 
+$E(X) = \sum\limits_{i=1}^6 i \cdot \frac{1}{6} = \frac{1}{6} \sum\limits_{i=1}^6 i=\frac{1}{6} \cdot 21 = 3.5$   
+
+2. Sum of two dice: Looking at the PMF of the sum of two dice, it is apparent that $E(X)=7$. For an $i$ between 0 and 5, $P(X=7-i)=P(X=7+i)$. In other words, 2 has the same probability as 12, 3 as 11, etc. So,
+]
+
+.pull-right[.center[![](images/exp-symm.png)]]
+
+---
+
+## Linearity of Expectation
+
+The prior example demonstrated why the symmetry in the graph makes the value 7, without having to use any calculated values for the probability. There is a simpler way to calculate the expectation of the two dice based on linearity of expectation.   
+If $X,Y$ are random variables defined on the sample space, then:  
+.pull-left[
+![](images/lin-exp.png)
+
+In a like manner, if $X_!,...,X_n$ are all defined on $S$ then $E(X_1+...+X_n)=E(X_1)_...+E(X_n)$
+]
+
+.pull-right[
+So if we were to redo the previous example with 2 dice:  
+
+$E(X) = E(X_1 + X_2)$  
+$=E(X_1)+E(X_2)$  
+$= 3.5 +3.5 = 7$  
+
+Additionally, if $c \in \mathbf{R}$ is constant, then   
+$E(cX) = c \cdot E(X)$
+
+]
+---
+class: inverse center middle
+
+## Continuous Random Variables, PMFs & CDFs
+
+
+---
 ## Expectation
 
 > This is a blockquote following a header.
