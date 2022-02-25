@@ -705,63 +705,131 @@ $E(cX) = c \cdot E(X)$
 
 ]
 ---
+
+## Conditional Probability
+
+> Let $E$ and $F$ be events in a probability space. $P(E|F)$ denotes the conditional probability of $E$ conditiond on $F$. Meaning, what proportion of the times that $F$ occurs, does $E$ also occur? This is defined by:
+.center[
+$P(E|F)=\frac{P(E\cap F)}{P(F)}$
+]
+
+.left-column[
+![](images/cond-prob.png)
+]
+.right-column[
+**Example 1**. The figure to the left illustrates the definition. Imagine the dots represent outcomes each with probability $\frac{1}{2}$. Then $P(E)=\frac{1}{2}, P(E)=\frac{5}{12}$, and $P(E\cap F) = \frac{3}{5}$. Thus, $P(E|F)=\frac{3}{5}$ and $P(F|E)=\frac{1}{2}$
+
+**Example 2**. Consider the roll of a die. Let $F$ be the event 'the number showing is even', and the $E_1,E_2$ the events 'the number showing is 1' and 'the number showing is 2', respectively. Here, $F=\{2,4,6\}, E_1=\{1\},E_2=\{2\}, E_1 \cap F = \emptyset$ and $E_2 \cap F = \{2\}$. Then, $P(E_1|F)=0$, while $P(E_2|F)=\frac{1}{3}$.
+]
+---
+
+### More examples of conditional probability
+
+.pull-left[
+**Example 3**. Given 2 coins, what is the probability that both coins coins are heads, given one of them is heads? That is,  what is $P(E|F)$ where $E$ is the event 'both coins are heads' and $F$ is the event 'at least one coin is heads'. Our sample space is the 4 equally likely outcomes HH,HT,TH,TT. As sets, $F=\{HH,HT,TH\}$ so $P(F)=\frac{3}{4}$. In this case, $E \cap F = E = \{H,H\}$, so $P(E)=\frac{1}{4}$. Thus,
+.center[
+$P(E|F)=\frac{P(E \cap F)}{P(F)} = \frac{1}{4}/\frac{3}{4} = \frac{1}{3}$
+]
+
+**Example 4**. *Chain Rule for conditional probability*. If we consider the intersection of 3 events and apply the definition twice, we get
+.center[
+$P(E_1 \cap E_2 \cap E_3) = P(E_1|E_2 \cap E_3) \cdot P(E_2 \cap E_3)$  
+$= P(E_1|E_2 \cap E_3) \cdot P(E_2|E_3) \cdot P(E_3)$,
+]
+
+and similarly for any number of events.
+]
+.pull-right[
+**Example 5**. *Connection with independence*. If $E,F$ are independent, then $P(E \cap F)=P(E) \cdot P(F)$, so it follows that $P(E|F)=P(E)$. Conversely, if $P(E|F)=P(E)$, it follows from the definition that $P(E \cap F)=P(E) \cdot P(F)$. So we can characterize independence this way in terms of conditional probability. Because of the symmetry in the problem, this also implies $P(F|E)=P(F)$.
+
+**Example 6**. We have 2 urns. Urn 1 has 2 black & 3 white balls. Urn has 1 black & 1 white ball.The tree below visualizes the sample spaces and the probabilities of the spaces.
+
+.center[![](images/cond-tree.png)]
+]
+---
 class: inverse center middle
 
-## Continuous Random Variables, PMFs & CDFs
+## Bayes Theorem
 
 
 ---
-## Expectation
+## Bayes Probability
 
-> This is a blockquote following a header.
->
-> When something is important enough, you do it even if the odds are not in your favor.
+> The definition implies,  
+> .center[
+$P(E|F) \cdot P(F) = P(E \cap F) = P(F|E) \cdot P(E)$
+]  
+> which can be rewritten as,  
+> .center[
+$P(E|F) = \frac{P(F|E)}{P(F)} \cdot P(E)$
+]
+
+This is what is known as *Bayes probability*. It can be thought of simply as 'given the outcome of the second stage of a 2-stage experiment, find the probability for an outcome at the first stage'. Returning to the urn tree diagram, we were able to find the probabilities for a ball of a given color, given the urn chosen. The tree below is a *reverse tree diagram* calculating the *inverse probability* that a particular urn was chosen, given the color of the ball. Bayes probabilities can be obtained by simply constructing the tree in reverse order.
+
+
+.pull-left[![](images/bayes-tree.png)]
+
+.pull-right[
+From the forward tree, we find that the probability of a black ball is, $\frac{1}{2} \cdot \frac{2}{5} + \frac{1}{2} \cdot \frac{1}{2} = \frac{9}{20}$. From there we can compute the probability of the second level by simple division: $\frac{9}{20} \cdot x = \frac{1}{5} \therefore x=4/9=P(I|B)$
+]
+---
+
+## Bayes' Formula
+
+Suppose we have a set of events $H_1,H_2,...,H_m$ that are pairwise disjoint and such that the sample space $\Omega$ satisfies this equation, 
+
+.center[ 
+$\Omega = H_1 \cup H_2 \cup \cdots \cup H_m$ 
+]
+
+We call these events *hypotheses*. We also have an event *E* that gives us some information about which hypothesis is correct - *evidence*.  
+Before we receive the evidence, then, we have a set of *prior probabilities* $P(H_1), P(H_2),...,P(H_m)$ for the hypotheses. If we know the correct hypothesis, we know the probability for the evidence. That is,m we know $P(E|H_i)$, for all $i$. We want to find the probabilities for the hypotheses given the evvidence. That is, we want to find the conditional probabilities $P(H_i|E)$. These probabilities are called the *posterior probabilities*. To find these probabilities, we write them in the form,
+
+.center[
+$P(H_i|E)=\frac{P(H_i \cap E)}{P(E)}$ where $P(H_i \cap E) = P(H_i)P(E|H_i)$ and $P(E)=P(H_1 \cap E)+...+P(H_m \cap E)$
+]
+
+Using these formula we yield *Bayes' formula*:  
+.center[
+$P(H_i|E)=\frac{P(H_i)P(E|H_i)}{\sum_{k=1}^m P(H_k)P(E|H_k)}$
+]
+---
+
+## Bayes' - A Medical Application
+
+A doctor is trying to decide if a patient has one of three diseases $d_1,d_2,$ or $d_3$. Two tests are carried out, each of which results in a positive (+) or a negative (-) outcome. There are four possible test patterns ++, +-, -+, and --. National records have indicated that, for 10,000 people having one of the three diseases, the distribution of disease and test results are as follows: 
+.center[
+![](images/dis-dat.png)
+]
+.pull-left[
+From this data we can estimate the *prior probabilities* for each of the diseases and, given a disease, the probability of a particular test outcome. For example, the prior of $d_1 = 3215/10000 = .3215$. Then, the probability of the test result +-, given $d_1$ can be estimated by $301/3215 = .094$.
+]
+.pull-right[
+Using Bayes' formula we can compute the various *posterior probabilities*. 
+.center[![](images/post-prob.png)]
+]
+---
+
+## Naïve Bayes Classifier
+
+The previous balls in the urn example forms the basis for an important tool in machine learning. We want to determine which of the two classes, $I$ and $II$, a given urn belongs to. We sample some balls and get some result $E$ of the sampling experiment. The task is to find out which of $P(I|E)$ and $P(II|E)$ is larger.  
+
+**Example.** Spam email.Suppose we want to determine whether a certain message is spam or not. We first train our classifier on a large number messages that have been classified by hand, and find the distribution of words in a large collection of spam messages, and likewise the distribution of words in a large number of messages that are not spam. (For example, in a dataset of both spam and non-spam messages, the word ‘won’ was 100 times more likely to occur in a spam message than in a legitimate message.) These word distributions are then treated exactly like the color distributions for the balls. If we are given a fresh document, D, we view it simply as a collection of words, and compute two scores for it, one relative to the spam distribution found during training, and the other relative to the non-spam distribution, and choose the class associated with the higher score.
+
+> What is 'naïve' about this method is that it ignores thinkgs like the occurrees of key phrases or anything else having to do with the order of words in the document and instead treats the generation of a documents as simply pulling a bunch of words out of a bag of words. *In fact, this is called the 'bag of words' model in machine learning literature.*
+
+---
+class: inverse center middle
+
+## Continuous Probability Spaces
 
 ---
 
-## Variance
+## What does 'probability 0' meann?
 
-#### R Code
-
-```{r eval=FALSE}
-ggplot(gapminder) +
-  aes(x = gdpPercap, y = lifeExp, size = pop, color = country) +
-  geom_point() +
-  facet_wrap(~year)
-```
+**Example.** A spinner. 
 
 ---
-
-## Standard Deviation
-
-```{r eval=FALSE}
-dplyr::starwars %>% dplyr::slice_sample(n = 4)
-```
-
----
-
-## Distributions
-
-```{r message=TRUE, eval=requireNamespace("cli", quietly = TRUE)}
-cli::cli_alert_success("It worked!")
-```
-
-```{r message=TRUE}
-message("Just a friendly message")
-```
-
-```{r warning=TRUE}
-warning("This could be bad...")
-```
-
-
-```{r error=TRUE}
-stop("I hope you're sitting down for this")
-```
-
-
----
-
 ## Central Limit Theorem
 
 ---
