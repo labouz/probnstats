@@ -1082,6 +1082,26 @@ class: inverse center middle
 ## Hypothesis Testing
 
 The basic framework for a binary discrete-type observation: 
+.center[![](images/hyp.png)]
+
+**Example.** Results of a CAT scan (system). In this scenario, the hypotheses would be $H_1$: a tumor is present; $H_0$: no tumor is present. The observed data is modeled by a discrete-type random variable $X$. Suppose if hypothesis $H_1$ is true, then $X$ has a pmf $p_1$ and if hypothesis $H_0$ is true, then $X$ has pmf $p_0$. The table below shows the corresponding likelihood matrix:
+.center[![](images/hyp-matrix.png)]
+
+A *decision rule* specifies what which hypothesis is to be declared for each possible value of $X$. The table below shows where $H_1$ is declared when the rule is $X \ge 1$
+
+.center[![](images/hyp-matrix2.png)]
+---
+
+## Hypothesis Testing (cont.)
+
+There are 4 possible outcomes in hypothesis testing:  
+* $H_0$ is true and $H_0$ is declared = *true negative*
+* $H_1$ is true and $H_1$ is declared = *true positive*
+* $H_0$ is true and $H_1$ is declared = *false positive* a.k.a *Type I error* 
+  * define by: $p_{FP} = P(declare H_1|H_0)$
+* $H_1$ is true and $H_0$ is declared = *false negative* a.k.a *Type II error*
+  * define by: $p_{FN} = P(declare H_0|H_1)$
+
 
 ---
 ## Estimation 
@@ -1100,13 +1120,34 @@ $\hat\mu = \overline{x} = \sum\limits_{i=1}^n x_i/n$
 $\hat\mu$ ~ $N(\mu, \sigma/\sqrt{n})$ where $\mu$ is the true mean & $\sigma/\sqrt{n}$ is the true standard deviation of $\hat\mu = \overline{x}$
 ]
 .pull-right[
-bell curve
+![](images/norm-dist.png)
 ]
 
 ---
 
-## Confidence Intervals
+## Confidence Intervals (CI)
+> A 95% CI means that in repeated samples, ther is a 95% probability the CI contain the true parameter of interest. the CI is a range of values for a population paparemeter with a level of confidence attached. The level of confidence is similar to probability. The CI starts with the point estimate and builds in the *margin of error*. The margin of error inforporates the confidence level (chosen by investigator) and the sampling variability or standard error of the point estimate.
 
+Suppose we want to generate a CI estimate for an unknown population mean. Remember, CI is *point estimate* +- *margin of error* (MoE), or $\overline{X}$ +- *MoE*. Thus, for a 95% CI,
+.center[
+$P(\overline{X} - MoE < \mu < \overline{X} + MoE)$
+]
+.pull-left[
+Recall, the Central Limit Theorem (CLT), stated for large samples the dist. of the sample means is approximately normal with $\mu_{\overline{X}}=\mu$ and $\sigma_{\overline{X}}=\frac{\sigma}{\sqrt{n}}$. We can use the CLT to derive the MoE. For std. normal dist, the following is true: $P(-1.96<z<1.96)=0.95$, i.e. there is a 95% chance that a std. normal var (z) will fall between -1.96 and 1.96
+]
+.pull-right[
+Also, according to CLT, $z = \frac{\overline{X}-\mu}{\sigma/\sqrt{n}}$. If we make the substitution,    
+$P(-1.96<\frac{\overline{X}-\mu}{\sigma/\sqrt{n}}<1.96) = 0.95$  
+$P(-1.96\frac{\sigma}{\sqrt{n}} <\overline{X} - \mu< 1.96\frac{\sigma}{\sqrt{n}}) = 0.95$  
+$P(\overline{X}-1.96\frac{\sigma}{\sqrt{n}} < \mu < \overline{X}+1.96\frac{\sigma}{\sqrt{n}} = 0.95$
+]
+---
+
+## p-value
+
+> The p-value is the probability of observing a test statistic more extreme in the direction of the alternative hypothesis as the one you observed, given $H_0$ is true.
+
+Note:
 ---
 ## Resources
 
