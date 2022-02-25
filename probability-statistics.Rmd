@@ -1145,9 +1145,43 @@ $P(\overline{X}-1.96\frac{\sigma}{\sqrt{n}} < \mu < \overline{X}+1.96\frac{\sigm
 
 ## p-value
 
-> The p-value is the probability of observing a test statistic more extreme in the direction of the alternative hypothesis as the one you observed, given $H_0$ is true.
+> The p-value is the probability of observing a test statistic more extreme in the direction of the alternative hypothesis as the one you observed, given $H_0$ (null) is true.
 
-Note:
+.pull-left[
+![](images/p-val.png)
+]
+.pull-right[
+Note: If the distribution shows in the distribution of the test statistic under the null hypothesis, the green area is the p-value corresponding to a one sided alternative. The p-value would be double the area in green if the alternative were two sided.
+]
+
+---
+
+## The Whole Picture
+
+The NCHS report indicated that in 2002, Americans paid an average of 3302 per year on healthcare and prescription drugs. We hypothesize that in 2005, expenditures are lower primarily due to availability of generic drugs. To test the hypothesis, a sample of 100 people are selected and their expenditures measured. The sample data are summarized as follows: $n=100,\overline{X}=3190$, and $s=890$. Is there statistcal evidence of a reduction in expenditure in 2005? We run the test using a 5-step approach:
+
+.pull-left[
+1. Set up hypotheses and level of significance:  
+$H_0:\mu=3302$,  
+$H_1:\mu<3302$,  
+$\alpha=0.05$
+
+2. Select appropriate test statistic:  
+Because sample size is large (>30), the appropriate test is  
+$z = \frac{\overline{X}-\mu}{\sigma/\sqrt{n}}$
+]
+.pull-right[
+3.Set up decision rule: this is a lower-tailed test so the appropriate critical value can be found on the table. 
+.pull-left[Reject $$H_0$$ if $$z \le -1.645$$ 
+]
+.pull-right[
+![](images/z-score.png)
+]  
+4.Compute test-statistic:  
+$z = \frac{\overline{X}-\mu}{\sigma/\sqrt{n}}= \frac{3190-3302}{890/\sqrt{100}}=-1.26 > -1.645 \rightarrow$ 5. $H_0$
+]
+
+
 ---
 ## Resources
 
