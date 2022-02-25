@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Intro to Probability &amp; Statistics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Layla Bouzoubaa" />
+    <meta name="date" content="2022-02-25" />
+    <script src="probability-statistics_files/header-attrs/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Intro to Probability &amp; Statistics
+## DSCI 501 - Winter 2022
+### Layla Bouzoubaa
+### 2022-02-25
+
+---
+
+
+
+
+
+
+## Objectives:
+
+- Understand probability spaces
+- Understand the principle of counting  
+- Learn how to find permutations  
+- Learn how to calculate combinations
+- Know how to compute independent probability  
+- Know how to compute conditional probability 
+- Understand the different types of variables  
+- Understand Bayes rule and how it can be useful 
+- Understand what expectation is  
+- Understand the importance of variance &amp; standard variation  
+- Know the main types of distributions  
+- Understand the Central Limit Theorem  
+- Know how to calculate a confidence interval  
+- Know how to perform a hypothesis test
+- Understand the significance of a p-value  
+
+---
+class: inverse center middle
+
+## Probaility
+
+---
+## Probability Spaces
+
+* Probability space = aka Probability triple `\((\Omega, \mathcal{F}, \mathcal{P})\)`, a mathematical construct that provides a formal model of a random process that contains the *sample space*, *event space* and the *probability function*   
+* Sample space `\(\Omega\)` = A set of outcomes of an experiment - also can be referenced as *S*  
+.center[**Example 1:** Toss a coin. *S* = {*H,T*}. |*S*| = 2]  
+.center[**Example 2:** Toss *N* coins in succession.An outcome is the resulting sequence of *N* H's and T's.  
+*S* = `\(\underbrace{(H,T) \times\cdots\times(H,T)}_{\mathrm{Ntimes}}\)`  
+|*S*| = `\(2^N\)`]  
+* Event = a subset of the sample space  
+.center[**Example 3:** In the experiment where *N* = 4, there are 16 outcomes. The event 'there are at least two consecutive H's' is the set:  
+*E = {HHHH, HHHT, HHTH, HHTT, THHH, THHT, TTHH}*]
+
+---
+## Probability Spaces (cont.)
+
+* Discrete space = a *countable* set. Can be *finite* or *infinite*.  
+.center[**Example 4:** Flip a coin repeatedly until you get heads. Outcome is the number of tosses:  
+*S* = {1,2,3 `\(\dots\)`} = `\(Z^+\)`(set of positive integers)  
+*S* is a *discrete infinite* sample space] 
+
+* Continuous space = *infinite* number of items in the space  
+.center[**Example 5:** Given we have a 2x2 sample space, what are the odds we throw a dart and it lands on (1,1)?  
+![](images/cont-space.png)  
+There are an infinite number of spaces the dart could land on. The odds of it landing on *exactly* (1,1) is zero (see [Zeno's Paradox](https://blogs.unimelb.edu.au/sciencecommunication/2017/10/22/zenos-paradox-the-puzzle-that-keeps-on-giving/)). However, the continuous space for the dart hitting anywhere on the board is : `\(S = \{(x,y)\} \in R \times R: x \times y \le 2\)`]
+
+---
+## Probability Functions
+
+* Probability function `\(\mathcal{P}\)` = the set function that returns an event's probability, a real number between 0 and 1. Therefore `\(P: \mathcal{P}(S) \to [0,1]\)` where `\(\mathcal{P}(S)\)` is the *power set* of *S*; the set of all subsets of *S*.
+
+* Probability Mass Function (PMF) = probability distribution; assigns a measure of likelihood, probability, of the outcome to each outcome in the sample space:
+.center[ `\(P:S \rightarrow [0,1]\)` where [0,1] denotes the *closed interval* `\(\{x \in R:0\le x \le 1\}\)` *and* that `\(\sum\limits_{s \in S} P(s)=1\)`  
+**Example 6:** For a coin toss, `\(P(0)=P(1)=\frac{1}{2}\)`. Likewise, for a fair die `\(P(i)=\frac{1}{6}\)` for all `\(i \in \{1,2,3,4,5,6\}\)`. These are instances of *uniform distributions* on finite sample space, in which  
+`\(P(s) = \frac{1}{|S|}\)` for all `\(s \in S\)`]
+* More specifically, `\(P\)` can be extended from the PMF to:  
+.center[ `\(P(E)=\sum\limits_{s \in S} P(s)\)`
+]
+
+* In the case where the PMF is *uniform*:
+.center[This simplifies to: `\(P(E)=\frac{|E|}{|S|}\)`
+]
+---
+
+## Probability Axioms 
+
+* *De Morgan's Law* in the theory of sets is that the complement of the union of two sets is the intersection of the complements. Or vice versa: the complement of the intersection is the union of the complements:  
+.center[
+`\((A \cup B)^c = A^cB^c\)`  
+`\((AB)^c=A^c\cup B^c\)`  
+De Morgan's law is easy to verify using the *Karnaugh map* for two events:  
+
+![](images/karn-map.png)
+]
+---
+
+## Probability Axioms (cont.)
+
+1. `\(P(E) \ge0\)` for every event *E*  
+2. `\(P(\Omega)=1\)`
+3. Events are *mutually exclusive*, or *disjoint*, when the probability of them co-occurring is 0. Therefore, if `\(E_i \cap E_j = \emptyset\)`  whenever `\(i \neq j\)`
+.center[
+`\(P(E \cup F)=P(E)+P(F)\)` - The sum can be finite or infinite. 
+] 
+
+If Axioms 1-3 are satisfied then `\(P\)` has other intuitive properties (note, A, B, E used interchangeably):  
+a. For any event `\(E, P(\bar{E})=1-P(E)\)`. That is because `\(E\)` and `\(\bar{E}\)` are mutually exclusive events and `\(\Omega=E \cap \bar{E}\)`. So Axioms 2 &amp; 3 yield `\(P(E)+P(\bar{E}) = P(E \cap \bar{E}) = P(\Omega) =1\)`  
+b. `\(P(\emptyset)=0.\)` That is because `\(\emptyset\)` and `\(\Omega\)` are complements of each other, so by Property a and Axiom 2, `\(P(\emptyset)=1-P(\Omega)=0\)`   
+c. If `\(A\subset B\)` then `\(P(A) \le P(B)\)`. That is because `\(B=A \cup (A^cB)\)` and `\(A\)` &amp; `\(A^cB\)` are mutually exclusive, and `\(P(A^cB)\ge 0,\)` so `\(P(A)\le P(A)+P(A^cB)=P(A\cup (A^cB))=P(B)\)`   
+d. Events `\(E_1\)` and `\(E_2\)` in a sample space are *independent* if `\(E_2\)` is no  more or less likely to occur when `\(E_1\)` occurs than when `\(E_1\)` does not occur: `\(P(E_1 \cap E_2)=P(E_1) \cdot P(E_2)\)`  
+e. `\(P(A \cup B) = P(A) + P(B) - P(AB)\)`
+
+---
+
+## Probability Examples - Set of Dice
+.pull-left[
+**Example 1:** Let `\(S=\{1,2,3,4,5,6\} \times \{1,2,3,4,5,6\}\)`, with uniform distribution, representing the usual roll of 2 dice. Let `\(E_1\)` be the event 'the first die is odd', and let `\(E_2\)` be the event 'the second die is even'. Then:  
+.center[
+`\(E_1=\{1,3,5\}\times\{1,2,3,4,5,6\}\)`  
+`\(E_2=\{1,2,3,4,5,6\}\times\{2,4,6\}\)`  
+`\(E_1\cap E_2 = \{1,2,3\}\times \{4,5,6\}\)`  
+So, `\(|E_1|=|E_2|=18, |E_1 \cap E_2| = 9\)`, thus:  
+`\(P(E_1 \cap E_2)=9/36=1/4=1/2 \cdot 1/2 = P(E_1)\cdot P(E_2)\)`  
+So, the events are *independent*
+]
+]
+.pull-right[
+```
+# simulate N rolls of a pair of standard 
+# dice and find the number of times 
+# each roll occurs.
+
+from pylab import *
+
+def dice(N):
+    d={} #Python dictionary
+    for j in range(N):
+        #need tuples to index dicts
+        x=tuple(choice(arange(1,7),2)) 
+        if x in d:
+            d[x]+=1
+        else:
+            d[x]=1
+    for j in arange(1,7):
+        for k in arange(1,7):
+            y=(j,k)
+            print(y,':',d[y])
+```
+]
+---
+## Probability Examples - Beans
+
+.pull-left[
+**Example 2**: A jar contains 100 navy beans, 100 pinto, and 100 black beans. You reach in the jar and pull out 3 beans. What is the probability that the 3 beans are all different?  
+- First define the sample space: `\(S=\{1,...,300\}\times \{1,...,300\}\times \{1,...300\}\)`  
+This is equal to `\(300^3 = 2.7 \times 10^7\)`
+- Event `\(|E|\)` is all the triples (*i,j,k*) of beans with different colors. The first bean has 300 possible values, the second 200, and the third 100. Therefore `\(P\)` with replacement:  
+`\(|E|=300\times200\times100 =6 \times10^6\)` 
+`\(P(E)=|E|/S = 6/27 = 0.2222\)`
+- Sampling *without* replacement changes the sample space:  
+`\(S = 300 \times 299 \times 298\)`  
+`\(P(E) = 6 \times 10^6 / (300 \times 299 \times 298) = 0.2245\)`
+]
+.pull-right[
+
+```
+# A bin contains b beans of each of 
+# three colors (0,1,2).
+# Pull out 3 beans (with or without 
+# replacement). What is the probability
+# that all three are different?
+
+def bean_sim(b,numtrials,repl=True):
+    # the jar
+    beans=[0]*b+[1]*b+[2]*b 
+    count=0
+    for j in range(numtrials):
+        sample=choice(beans,3,
+          replace=repl)
+        if (0 in sample) and 
+          (1 in sample) and 
+            (2 in sample):
+            count+=1
+    return count/numtrials
+
+```
+]
+---
+class: inverse center middle
+
+## Counting
+
+---
+## Counting Principle
+
+&gt; Rule of Product: If you have one event, A, and another event, B, then there are A x B ways to perform both actions.
+
+.center[*Events:* `\(a_1, a_2, \dots, a_n\)`  
+*Total number of ways:* `\(a_1 \times a_2 \times \cdots a_n\)`]
+
+- Example: I am packing for my vacation. I've selected 6 tops, 3 bottoms, 2 hats, and 2 pairs of shoes. How many different outfits can I make? 
+
+![](images/rop.png)
+--
+.center[**= 72 different outfits**]
+---
+## Tree Diagrams
+
+- A useful way to study the probabilities of events relating to experiments that take place in  stages and for which we are given the probabilities for the outcomes at each stage.
+
+*Example:* Dining at a restaurant.How many possible choices do you have for a complete meal?  
+&lt;/br&gt;
+![](images/menu-tree.png)
+
+---
+## Representing Tree Diagram of Probabilities
+
+Suppose the restaurant in the previous example wants to find the probability a customer chooses meat given they know the percentages of other choices?
+--
+.pull-left[
+
+| Symbol      | Meaning                                   |
+|:------------|:------------------------------------------|
+| `\(\Omega\)`    | The sample space - the set of all possible outcomes|
+| `\(\omega\)`    | An outcome. A sample point in the sample space |
+| `\(\omega_j\)`  | Finite number of outcomes in the sample space |
+| `\(m(\omega_j)\)`| The *distribution function*. Each outcome `\(\omega_j\)` is a assigned a nonnegative number `\(m(\omega_j)\)` in such a way that `\(m(\omega_1)+m(\omega_2)+\cdots + m(\omega_j) = 1\)` |
+]
+
+--
+
+.pull-right[
+![](images/menu-prob.png)]
+
+---
+## Representing Tree Diagram of Probabilities
+
+Suppose the restaurant in the previous example wants to find the probability a customer chooses meat given they know the percentages of other choices?
+
+.pull-left[
+| Symbol      | Meaning                                   |
+|:------------|:------------------------------------------|
+| `\(\Omega\)`    | The sample space - the set of all possible outcomes|
+| `\(\omega\)`    | An outcome. A sample point in the sample space |
+| `\(\omega_j\)`  | Finite number of outcomes in the sample space |
+| `\(m(\omega_j)\)`| The *distribution function*. Each outcome `\(\omega_j\)` is a assigned a nonnegative number `\(m(\omega_j)\)` in such a way that `\(m(\omega_1)+m(\omega_2)+\cdots + m(\omega_j) = 1\)` |
+
+]
+
+.pull-right[
+![](images/menu-prob2.png)]
+--
+
+#### The probability a customer chooses meat is `\(m(\omega_1)+m(\omega_4)=.46\)`
+---
+## Permutations
+
+&gt; How many sequences of *k* elements of *{1,...,n}* have all *k* elements distinct?
+
+For example, with `\(n=5,k=3\)`, then (4,5,1) is such a sequence, but (1,5,1) is not. We have *n* choices for the first component of the sequence, and for each such choice, `\(n-1\)` choices for the second, etc. So, by the above principle, the number of such sequences is:  
+.center[
+`\(n \cdot (n-1) \cdots (n-k+1) = \frac{n!}{(n-k)!}\)`
+]  
+
+This is the number of *k-permutations* of an n-element set. If `\(n = k\)`, then `\((n-k)!=0!=1\)`, so the number of n-permutations of `\(\{1,...,n\} = n!\)`. In this case, we just call them *permutations* of `\(\{1,...,n\}\)`. If `\(n &lt; k\)`, then the formula does not make sense - there are no *k-permutations* of `\(\{1,...,n\}\)`.
+
+**Example.** What is the number of sequences of 2 distinct cards drawn from a deck of cards (sampling without replacement)? 
+.center[
+`\(52 \times 51 = \frac{52!}{50!}\)`
+]
+---
+## A Birthday Example
+
+.pull-left[
+*Problem:* Given there are 30 people in a room, what is the probability that there are 2 people with the same birthday?  
+* 365 = possible birthdays for each person(ignore leap year) 
+* *k* = number of people in a room
+
+To solve this, let's order the people from 1 to *k*. First, let's find the probability that all 30 people have different birthdays. The number of possible birthdays for the first person is 365. What about for the second person?  
+* For each possible birthday in the sequence, there is one less available date so, for #2 = 364
+* Person #3 = 363, etc.
+* What is the sample space? 
+`\(|S| = 365^30, |E| = 365 \times \cdots 336\)`
+]
+.pull-right[
+Therefore, the probability that all 30 people have different birthdays is 
+
+.center[
+`\(P(E) = \frac{|E|}{|S|}= \frac{365}{365}\cdot \frac{364}{365}\cdots \frac{336}{365} = \frac{365 \cdot 364 \cdots (365-k+1)}{365^k}\)`
+]
+
+Then, the probability that there are two people with the same birthday is just the probability of the *complementary* event,
+
+.center[
+`\(1 -P(E) \approx 0.71\)`
+]
+
+This problem can also be solved the an *exponential approximation*...
+]
+---
+## Exponential Approximation
+
+&gt; The tangent line to the equation `\(y=e^x\)` at `\(x=0\)` is `\(y=1+x\)`. For small values of `\(x\)`, positive or negative, `\(1+x\)` is a good approximation to `\(e^x\)`, and vice-versa
+
+&lt;/br&gt;
+.center[![](images/exp.png)]
+
+
+---
+
+## Exponential Approximation - Birthday Edition
+
+Previously, we saw that the probability of no two people out of *k* having the same birthday as: `\(\frac{365 \cdot 364 \cdots (365-k+1)}{365^k}\)`
+
+This can be rewritten using exponential approximation:  
+.center[
+`\((1-\frac{1}{365}) \cdot (1-\frac{2}{365}) \cdots (1-\frac{k-1}{365})\)`  
+`\(&lt; e^\frac{-1}{365} \cdots e^{-(k-1)/365}\)`  
+`\(= e^{-(1+2+\cdots+(k-1))/365}\)`  
+`\(= e^{-k(k-1)/(2\cdot 365)}\)`  
+`\(&lt; e^{-(k-1)^2 / 730}\)`
+]
+
+Note, that as the value of *k* gets larger, the probability gets smaller. Let's say we want to find at what point it falls below 0.1, meaning the probability that at least 2 people having the same birthday is 90%. To do this we can solve:
+
+.center[
+`\(e^{-(k-1)^2 / 730} = 0.1\)`  
+Take reciprocals: `\(e^{(k-1)^2 / 730} = 10\)`  
+Take natural log: `\(\frac{(k-1)^2}{730}=ln 10\)`  
+Thus, `\(k=1+\sqrt{730 \cdot ln10} \approx 41\)` people
+]
+---
+
+## Birthday Edition - the Code:
+
+.pull-left[
+```
+#birthday plots
+
+from pylab import *
+
+def exact():
+    vals=[1]
+    prod =1
+    #No need to go higher than 70 people
+    for k in range(1,71):  
+        prod *= (365-k)/365
+        vals=concatenate((vals,[prod]))
+    plot(arange(1,72),1-vals,label='exact')
+    xlabel("Number of people.")
+```
+]
+.pull-right[
+```
+# compute and plot the same thing with 
+# the exponential approximation
+def approximate():
+  vals=array([1])
+  prod =1
+  for k in range(1,71):  
+      prod *= exp(-k/365)
+      vals=concatenate((vals,[prod]))
+  plot(arange(1,72),1-vals,
+    label='1-exp(-k(k-1)/(2X365))')
+  xlabel("Number of people.")
+
+def do_both():
+    exact()
+    title("Probability of 
+      coincidental birhday (exact).")
+    show()
+    approximate()
+    title("Proability of 
+    coincidental birthday (approximate).")
+    show()
+
+```
+]
+
+---
+## Binomial Coefficients
+
+&gt; The number of k-element subsets of an n-element set (when `\(0 \le k \le n\)`), "n choose k";  
+.center[
+`\(\binom{n}{k}=\frac{n!}{(n-k)!k!}\)` ]
+
+This formula works when n=0 or when k=0, k=n because 0! = 1.
+
+*Properties:*  
+* `\(\binom{n}{0}=\binom{n}{n}\)` for all `\(n \ge 0\)`  
+* `\(\binom{n}{k}=\binom{n}{n-k}\)` for all `\(0 \le k \le n\)`  
+* `\(\binom{n}{k}=\binom{n-1}{k-1}+\binom{n-1}{k}\)` for all `\(1 \le k \le n\)` 
+
+**Example.** Select 5 cards from a 52-card deck. What is the probability of getting a flush (all cards of the same suit)?
+
+* Given that the probability distribution is uniform, the probability of any event *E* is given by: `\(\frac{|E|}{\binom{52}{5}}\)`  
+* For the flush, each suit has 13 cards, so that there are `\(\binom{13}{5}\)` flushes in that suit, thus:
+.center[
+`\(|E| = 4 \cdot \binom{13}{5}\)`
+]
+---
+
+## Binomial Theorem
+
+**Problem.** `\((x+y)^4 = xxxx+xxxy+xxyx+\cdots+yyyx+yyyy\)`
+
+The right-hand is the sum of all sequences of 4 x's and y's. The coefficient of `\(x^{4-k} y^k\)` is the number of such sequences containing exactly `\(k\)` `\(y\)`'s Thus:  
+.center[
+`\((x+y)^4 = \binom{4}{0}x^4 + \binom{4}{1}x^3y + \binom{4}{2}x^2y^2 + \binom{4}{3}xy^3 + \binom{4}{4}y^4\)`  
+`\(= x^4 +4x^3y +6x^2y^2+4xy^3+y^4\)`  
+Therefore, for any `\(n \ge 0\)`  
+`\((x+y)^n = \sum\limits_{k=0}^n \binom{n}{k}x^k y^{n-k}\)`
+]
+
+**Example.** How many ways are there to arrange the letters of the word MISSISSIPPI?  
+- There are 11 letters and if all were different the answer would be 11!. But, in this problem, many of those 11! arrangements represent the same string so we need to treat the problem as a sequence of choices for each of the distinct letters. 4/11 positions to hold I, then for each choice 4/7 remaining positions to hold S, then 2/3 remaining positions to hold P. After that there is only 1 position remaining for M:  
+.center[
+`\(\binom{11}{4} \binom{7}{4} \binom{3}{2} = \frac{11!}{4!7!} \cdot \frac{7!}{4!3!} \cdot \frac{3!}{2!1!} = \frac{11!}{4!4!2!}\)`
+]
+---
+class: inverse center middle
+
+## Discrete Random Variables, PMFs &amp; CDFs
+
+
+---
+
+## Discrete-type Random Variables
+
+&gt; *Random variable X* assigns a number to the outcome of an experiment.
+
+**Example.** Coin Tosses - toss a fair coin 20 times:
+- `\(X_1\)` = the number of heads tossed
+- `\(X_2\)` = excess heads over tails (number of heads - number of tails)
+- `\(X_3\)` = length of the longest run of consecutive heads or tails
+- `\(X_4\)` = number of tosses until heads comes up
+
+These are all *random variables*.
+
+A random variable is said to be *discrete-type* if there is a finite set `\(u_1,...,u_n\)` or a countable infinite set `\(u_1,u_2,...\)` such that 
+
+.center[
+`\(P\{X \in \{u_1,u_2,...\}\} = 1\)`
+]
+
+The *probability mass function* (pmf) for a discrete-type random variable `\(X, p_X\)`, is defined by `\(p_X(u)=P\{X=u\}\)` The above formula can be written as
+.center[
+`\(\sum\limits_{i}p_X(u_i) = 1\)`
+]
+---
+
+## Discrete Random Variables- Examples
+
+**Example.** Let *S* be the sum of the numbers showing on a pair of fair dice when they are rolled. Find the pmf of *S*.
+
+**Solution:** The underlying sample space is `\(\Omega = \{(i,j):1\le i \le 6, 1 \le j \le 6\}\)`, and it has 36 possible outcomes, each having a probability of `\(1/36\)`. The smallest value of *S* is 2 thus `\(\{S=2\}=\{(1,1)\}\)`. That is, there is only one outcome resulting in *S* = 2, so `\(p_S(2)=1/36\)`. Similarly, `\(\{S=3\}=\{(1,2),(2,1)\}\)`, so `\(p_S(3)=2/36\)`. And, `\(\{S=4\}=\{(1,3),(2,2),(3,1)\}\)`, so `\(p_S(4)=3/36\)` and so forth. The pmf of *S* is shown below.  
+&lt;/br&gt;
+
+.center[![](images/pmf-dice.png)]
+
+---
+
+## Independent Random Variables
+
+&gt; Two random variables are said to be *independent* if for all `\(a,b \in \mathbf{R}\)`,  
+
+.center[
+`\(\{s \in S: X_1(s)=a\}, \{s \in S:X_2(s) =b\}\)`
+]
+
+are independent event. Recall this means that for all *a* and *b*,
+.center[
+`\(P((X_1=a) \land (X_2=b)) = P(X_1=a) \cdot P(X_2=b).\)`
+]
+
+This implies that for any *sets* *A* and *B* of values, 
+.center[
+`\(\{s \in S: X_1(s) \in A\},\{s \in S:X_2(s) \in B\}\)`
+]
+
+are also independent events. 
+
+.footnote[
+The symbol `\(\land\)` can be read as "and".
+]
+---
+
+## Independent Random Variables - Example
+
+We naturally assume that the random variables that we denoted in the previous dice example, representing the individual outcomes of each of the two dice ( `\(Y_{2,1}\)` and `\(Y_{2,2}\)` ), are independent. We can compute the PMF of the sum `\(Y_2=Y_{2,1} + Y_{2,2}\)`. For example, the event `\(Y_2=8\)` is the disjoint union of the events: 
+
+.center[
+`\((Y_{2,1}=2) \land (Y_{2,1}=6)\)`  
+`\((Y_{2,1}=3) \land (Y_{2,1}=5)\)`  
+`\((Y_{2,1}=4) \land (Y_{2,1}=4)\)`  
+`\((Y_{2,1}=5) \land (Y_{2,1}=3)\)`  
+`\((Y_{2,1}=6) \land (Y_{2,1}=2)\)`
+]
+
+Independence implies that each of these events has probability `\(\frac{1}{6} \cdot \frac{1}{6} = \frac{1}{36}\)`, so `\(P_{Y_2}(8)= \frac{5}{36}\)`
+
+&gt; If we know the distributions of two random variables, and we know that they are independent, then we can compute the distribution of their sum (and, likewise, their product, or any other operation performed on them).  
+
+Note: `\(Y_2\)` and `\(Y_{2,2}\)` are *not* independent. The sum of the two dice really does depend on what shows up on the second die! We can verify this formally: `\(P(Y_2=12)=\frac{1}{36}\)`. `\(P(Y_{2,2}=5)=\frac{1}{6}\)`, BUT `\(P((Y_2=12)\land(Y_{2,2}=5))=0\neq 1/36 \cdot 1/6\)`
+
+---
+
+## Cumulative Distribution Function (CDF)
+
+&gt; The *cumulative distribution* function of a random variable `\(X\)`, denote `\(F_X\)`, is a function  
+.center[
+`\(F_X:\mathbf{R} \rightarrow [0,1]\)`  
+]
+defined by:  
+.center[
+`\(F_X(a) = P(X \le a)\)`.
+]
+
+For discrete random variables, we can compute the CDF as: `\(F_X(a)=\sum\limits_{b\le a}P_X(b)\)`  
+For discrete random variables, the CDF is a step function as shown below for the sum of two dice.  
+
+.center[![](images/cdf-dice.png)]
+
+---
+## Simulating the roll of 2 dice - code
+
+.pull-left[
+```
+# Compute probabilites for the roll of 2
+# dice. The value returned is an array of
+# the cardinality of the frequencies of
+# the events X=i for i from 2 through 12.
+
+from pylab import *
+
+def dice_frequencies():
+    #generate the sample space
+    s=[(i,j) for i in range(1,7) 
+      for j in range(1,7)]
+    t=[sum(pair) for pair in s]
+    h=histogram(t,bins=arange(1.5,13,1))
+    return h[0]
+```
+]
+
+.pull-right[
+```
+# Use the cumulative distribution
+# function to simulate 100,000 samples 
+# from this distribution.  Then obtain a
+# histogram of the relative frequencies
+# and plot them side by side with the
+# theoretically derived probabilities.
+def display():
+    y=dice_frequencies()/36
+    z=cumsum(y)
+    stem(arange(2,13),y,label='computed',
+      linefmt='r-',markerfmt='k.')
+    samples=[2+searchsorted(z,random()) 
+      for j in range(100000)]
+    h=histogram(samples,
+      bins=arange(1.5,13,1))
+    stem(arange(2.2,13.2,1),h[0]/100000,
+      label='simulated',linefmt='k-',
+        markerfmt='r.')
+    title('PMF of sum of two dice')
+    legend(loc='upper right')
+    show()
+```
+
+]
+---
+class: inverse center middle
+## Important Discrete Random Variables
+
+
+---
+
+## Bernoulli Distribution
+
+&gt; A random variable `\(X\)` is said to have the *Bernoulli distribution* with parameter `\(p\)`, where `\(0 \le p \le1\)`, if `\(P(X = 1) = p\)` and `\(P(X = 0) = 1-p\)`
+
+Note: There is not one Bernoulli distribution - you get a different PMF for every value of a parameter `\(p\)`.
+
+**Example.** Flip a biased coin with heads probability `\(P\)`, and set `\(X=1\)` if the results is heads and `\(X=0\)` otherwise. 
+
+#### Bernoulli Trials
+
+The principal use of the binomial coefficients will occur in the study of one of the important chance processes called *Bernoulli trials*. Bernoulli trials process is a sequence of `\(n\)` chance experiments such that: 
+.pull-left[
+1. Each experiment has two possible outcomes, which we may call success and failure  
+2. The probability `\(p\)` of success on each experiment is the same for each experiment, and this probability is not affected by any knowledge of previous outcomes. The probability `\(p\)` of failure is given by `\(q = 1 − p\)`.
+]
+.pull-right[
+.center[![](images/bernoulli-tree.png)]
+]
+---
+
+## Binomial Distribution
+
+&gt; Suppose `\(n\)` independent Bernoulli trials are conducted, each resulting in a 1 with probability `\(p\)` and a 0 with probability `\(1-p\)`. Let X denote the total number of 1s occurring in the `\(n\)` trials. Any particular outcome with `\(k\)` ones and `\(n-k\)` zeros has the probability `\(p^k(1-p)^{n-k}\)`. Since there are `\(\binom{n}{k}\)` possible outcomes, we find the pmf of `\(X\)` is
+.center[
+`\(P_X(k)=\binom{n}{k}p^k(1-p)^{n-k}\)`
+]
+
+**Example.** The number of heads on `\(n\)` successive tosses of a biased coin with heads probability `\(p\)`.
+
+The distribution of `\(X\)` is called the *binomial distribution* with parameters `\(n\)` and `\(p\)`
+
+.center[![](images/binom-pmf.png)]
+---
+
+## Geometric Distribution
+
+&gt; There is a single parameter `\(0 \le p \le 1\)`. If `\(k\)` is a positive integer, then  
+.center[
+`\(P_X(k)=(1-p)^{k-1}p\)`
+]
+
+**Example.** `\(X\)` is the number of flips of a biased coin with heads probability `\(p\)` until heads appears. For instance, `\(X=1\)` if the first toss is heads, `\(X=3\)` if the first two are tails and the third is heads. Note that this has a nonzero value at all posisive integers `\(k\)`.
+
+.center[
+![](images/geom-dist.png)
+]
+---
+
+## Poisson Distribution
+
+&gt; Let `\(\lambda &gt; 0\)`. We set 
+.center[
+`\(P(X=k)= \frac{\lambda^k}{k!} \cdot e^{-\lambda}\)` for `\(k \ge 0\)`
+]
+
+By this definition, the first 4 terms of this PMF are: `\(p(0)=e^{-\lambda}\)`, `\(p(1)=\lambda e^{-\lambda}\)`, `\(p(2)=\frac{\lambda^2}{2} e^{-\lambda}\)`, `\(p(3)=\frac{\lambda^3}{6} e^{-\lambda}\)`.  
+The Poisson distribution arises frequently in practice, because it is a good approximation for a binomial distribution with parameters `\(n\)` and `\(p\)`, when n is very large, `\(p\)` is very small, and `\(\lambda = np\)`. Some examples in which such binomial distributions occur are:  
+* Incoming phone calls in a fixed time interval: `\(n\)` is the number of people with cell phones within the access region of one base station, and `\(p\)` is the probability that a given such person will make a call within the next minute.  
+* Misspelled words in a document: `\(n\)` is the number of words in a document and `\(p\)` is the probability that a given word is misspelled.
+
+**Example.** Suppose 500 shots are fired at a target. It is known that only about one in one hundred shots hit the bulls-eye. What is the probability of getting 3 or more bulls-eyes? To solve this, we compute the complementary (0,1,or 2), In the Poisson approximation this is given by: `\(e^{-\lambda}(1+\lambda+\lambda^2/2) = 18.5e^{-5} \approx0.125\)`. There for the probability of at least 3 bulls-eyes is about 0.875
+---
+
+## Expected value of a random variable
+
+&gt; `\(E(X)\)` denotes the *expected value*, or *expectation*, or *mean* of the random variable X. The definition is just the weighted average of the values of X, where the weights are the probabilities:  
+.center[
+`\(E(X)=\sum\limits_{a} a \cdot P_X(a)\)`
+]
+
+####Simple Examples
+
+.pull-left[
+
+1. A single die: Here, `\(P_X(i) = 1/6\)` for `\(i=1,...,6\)`.
+So, 
+`\(E(X) = \sum\limits_{i=1}^6 i \cdot \frac{1}{6} = \frac{1}{6} \sum\limits_{i=1}^6 i=\frac{1}{6} \cdot 21 = 3.5\)`   
+
+2. Sum of two dice: Looking at the PMF of the sum of two dice, it is apparent that `\(E(X)=7\)`. For an `\(i\)` between 0 and 5, `\(P(X=7-i)=P(X=7+i)\)`. In other words, 2 has the same probability as 12, 3 as 11, etc. So,
+]
+
+.pull-right[.center[![](images/exp-symm.png)]]
+
+---
+
+## Linearity of Expectation
+
+The prior example demonstrated why the symmetry in the graph makes the value 7, without having to use any calculated values for the probability. There is a simpler way to calculate the expectation of the two dice based on linearity of expectation.   
+If `\(X,Y\)` are random variables defined on the sample space, then:  
+.pull-left[
+![](images/lin-exp.png)
+
+In a like manner, if `\(X_!,...,X_n\)` are all defined on `\(S\)` then `\(E(X_1+...+X_n)=E(X_1)_...+E(X_n)\)`
+]
+
+.pull-right[
+So if we were to redo the previous example with 2 dice:  
+
+`\(E(X) = E(X_1 + X_2)\)`  
+`\(=E(X_1)+E(X_2)\)`  
+`\(= 3.5 +3.5 = 7\)`  
+
+Additionally, if `\(c \in \mathbf{R}\)` is constant, then   
+`\(E(cX) = c \cdot E(X)\)`
+
+]
+---
+
+## Conditional Probability
+
+&gt; Let `\(E\)` and `\(F\)` be events in a probability space. `\(P(E|F)\)` denotes the conditional probability of `\(E\)` conditiond on `\(F\)`. Meaning, what proportion of the times that `\(F\)` occurs, does `\(E\)` also occur? This is defined by:
+.center[
+`\(P(E|F)=\frac{P(E\cap F)}{P(F)}\)`
+]
+
+.left-column[
+![](images/cond-prob.png)
+]
+.right-column[
+**Example 1**. The figure to the left illustrates the definition. Imagine the dots represent outcomes each with probability `\(\frac{1}{2}\)`. Then `\(P(E)=\frac{1}{2}, P(E)=\frac{5}{12}\)`, and `\(P(E\cap F) = \frac{3}{5}\)`. Thus, `\(P(E|F)=\frac{3}{5}\)` and `\(P(F|E)=\frac{1}{2}\)`
+
+**Example 2**. Consider the roll of a die. Let `\(F\)` be the event 'the number showing is even', and the `\(E_1,E_2\)` the events 'the number showing is 1' and 'the number showing is 2', respectively. Here, `\(F=\{2,4,6\}, E_1=\{1\},E_2=\{2\}, E_1 \cap F = \emptyset\)` and `\(E_2 \cap F = \{2\}\)`. Then, `\(P(E_1|F)=0\)`, while `\(P(E_2|F)=\frac{1}{3}\)`.
+]
+---
+
+### More examples of conditional probability
+
+.pull-left[
+**Example 3**. Given 2 coins, what is the probability that both coins coins are heads, given one of them is heads? That is,  what is `\(P(E|F)\)` where `\(E\)` is the event 'both coins are heads' and `\(F\)` is the event 'at least one coin is heads'. Our sample space is the 4 equally likely outcomes HH,HT,TH,TT. As sets, `\(F=\{HH,HT,TH\}\)` so `\(P(F)=\frac{3}{4}\)`. In this case, `\(E \cap F = E = \{H,H\}\)`, so `\(P(E)=\frac{1}{4}\)`. Thus,
+.center[
+`\(P(E|F)=\frac{P(E \cap F)}{P(F)} = \frac{1}{4}/\frac{3}{4} = \frac{1}{3}\)`
+]
+
+**Example 4**. *Chain Rule for conditional probability*. If we consider the intersection of 3 events and apply the definition twice, we get
+.center[
+`\(P(E_1 \cap E_2 \cap E_3) = P(E_1|E_2 \cap E_3) \cdot P(E_2 \cap E_3)\)`  
+`\(= P(E_1|E_2 \cap E_3) \cdot P(E_2|E_3) \cdot P(E_3)\)`,
+]
+
+and similarly for any number of events.
+]
+.pull-right[
+**Example 5**. *Connection with independence*. If `\(E,F\)` are independent, then `\(P(E \cap F)=P(E) \cdot P(F)\)`, so it follows that `\(P(E|F)=P(E)\)`. Conversely, if `\(P(E|F)=P(E)\)`, it follows from the definition that `\(P(E \cap F)=P(E) \cdot P(F)\)`. So we can characterize independence this way in terms of conditional probability. Because of the symmetry in the problem, this also implies `\(P(F|E)=P(F)\)`.
+
+**Example 6**. We have 2 urns. Urn 1 has 2 black &amp; 3 white balls. Urn has 1 black &amp; 1 white ball.The tree below visualizes the sample spaces and the probabilities of the spaces.
+
+.center[![](images/cond-tree.png)]
+]
+---
+class: inverse center middle
+
+## Bayes Theorem
+
+
+---
+## Bayes Probability
+
+&gt; The definition implies,  
+&gt; .center[
+`\(P(E|F) \cdot P(F) = P(E \cap F) = P(F|E) \cdot P(E)\)`
+]  
+&gt; which can be rewritten as,  
+&gt; .center[
+`\(P(E|F) = \frac{P(F|E)}{P(F)} \cdot P(E)\)`
+]
+
+This is what is known as *Bayes probability*. It can be thought of simply as 'given the outcome of the second stage of a 2-stage experiment, find the probability for an outcome at the first stage'. Returning to the urn tree diagram, we were able to find the probabilities for a ball of a given color, given the urn chosen. The tree below is a *reverse tree diagram* calculating the *inverse probability* that a particular urn was chosen, given the color of the ball. Bayes probabilities can be obtained by simply constructing the tree in reverse order.
+
+
+.pull-left[![](images/bayes-tree.png)]
+
+.pull-right[
+From the forward tree, we find that the probability of a black ball is, `\(\frac{1}{2} \cdot \frac{2}{5} + \frac{1}{2} \cdot \frac{1}{2} = \frac{9}{20}\)`. From there we can compute the probability of the second level by simple division: `\(\frac{9}{20} \cdot x = \frac{1}{5} \therefore x=4/9=P(I|B)\)`
+]
+---
+
+## Bayes' Formula
+
+Suppose we have a set of events `\(H_1,H_2,...,H_m\)` that are pairwise disjoint and such that the sample space `\(\Omega\)` satisfies this equation, 
+
+.center[ 
+`\(\Omega = H_1 \cup H_2 \cup \cdots \cup H_m\)` 
+]
+
+We call these events *hypotheses*. We also have an event *E* that gives us some information about which hypothesis is correct - *evidence*.  
+Before we receive the evidence, then, we have a set of *prior probabilities* `\(P(H_1), P(H_2),...,P(H_m)\)` for the hypotheses. If we know the correct hypothesis, we know the probability for the evidence. That is,m we know `\(P(E|H_i)\)`, for all `\(i\)`. We want to find the probabilities for the hypotheses given the evvidence. That is, we want to find the conditional probabilities `\(P(H_i|E)\)`. These probabilities are called the *posterior probabilities*. To find these probabilities, we write them in the form,
+
+.center[
+`\(P(H_i|E)=\frac{P(H_i \cap E)}{P(E)}\)` where `\(P(H_i \cap E) = P(H_i)P(E|H_i)\)` and `\(P(E)=P(H_1 \cap E)+...+P(H_m \cap E)\)`
+]
+
+Using these formula we yield *Bayes' formula*:  
+.center[
+`\(P(H_i|E)=\frac{P(H_i)P(E|H_i)}{\sum_{k=1}^m P(H_k)P(E|H_k)}\)`
+]
+---
+
+## Bayes' - A Medical Application
+
+A doctor is trying to decide if a patient has one of three diseases `\(d_1,d_2,\)` or `\(d_3\)`. Two tests are carried out, each of which results in a positive (+) or a negative (-) outcome. There are four possible test patterns ++, +-, -+, and --. National records have indicated that, for 10,000 people having one of the three diseases, the distribution of disease and test results are as follows: 
+.center[
+![](images/dis-dat.png)
+]
+.pull-left[
+From this data we can estimate the *prior probabilities* for each of the diseases and, given a disease, the probability of a particular test outcome. For example, the prior of `\(d_1 = 3215/10000 = .3215\)`. Then, the probability of the test result +-, given `\(d_1\)` can be estimated by `\(301/3215 = .094\)`.
+]
+.pull-right[
+Using Bayes' formula we can compute the various *posterior probabilities*. 
+.center[![](images/post-prob.png)]
+]
+---
+
+## Naïve Bayes Classifier
+
+The previous balls in the urn example forms the basis for an important tool in machine learning. We want to determine which of the two classes, `\(I\)` and `\(II\)`, a given urn belongs to. We sample some balls and get some result `\(E\)` of the sampling experiment. The task is to find out which of `\(P(I|E)\)` and `\(P(II|E)\)` is larger.  
+
+**Example.** Spam email.Suppose we want to determine whether a certain message is spam or not. We first train our classifier on a large number messages that have been classified by hand, and find the distribution of words in a large collection of spam messages, and likewise the distribution of words in a large number of messages that are not spam. (For example, in a dataset of both spam and non-spam messages, the word ‘won’ was 100 times more likely to occur in a spam message than in a legitimate message.) These word distributions are then treated exactly like the color distributions for the balls. If we are given a fresh document, D, we view it simply as a collection of words, and compute two scores for it, one relative to the spam distribution found during training, and the other relative to the non-spam distribution, and choose the class associated with the higher score.
+
+&gt; What is 'naïve' about this method is that it ignores thinkgs like the occurrees of key phrases or anything else having to do with the order of words in the document and instead treats the generation of a documents as simply pulling a bunch of words out of a bag of words. *In fact, this is called the 'bag of words' model in machine learning literature.*
+
+---
+class: inverse center middle
+
+## Continuous Probability Spaces
+
+---
+
+## What does 'probability 0' mean?
+
+**Example.** A spinner. 
+
+.left-column[
+![](images/spinner.png)
+![](images/spinner-2.png)
+]
+
+The points on the circumference of the circle are labeled by the half-open interval `\(S=\{x \in \mathbf{R}:0 \le x &lt;1 \}\)`. This set can be denoted by `\([0,1)\)`. You can think of the spinner as a continuous analogue of a die: the outcomes are somehow 'equally likely'. This experiment is simulated by a call to the random number generator `rand()`.  
+
+For example: `\(E=\{x \in \mathbf{R}:0.5 \le x \le 0.75 \}=[0.5,0.75]\)` as depicted in the bottom left figure has probability `\(0.25\)`, since it occupies exactly 1/4 of the circumference.  
+
+By the same reasoning, we can say the probability of the half-open interval `\([0.5,0.75]\)`, which is obtained by removing the point `\(0.75\)`, is `\(0.25\)`. Thus because the union is disjoint: 
+
+
+`\(0.25 = P([0.5,0.75])\)`  
+`\(= P([0.5,0.75) \cup \{0.75\})\)`  
+`\(= P([0.5,0.75)) + P(\{0.75\})\)` 
+`\(= 0.25 + P(\{0.75\})\)`  
+This implies `\(P(\{0.75\}) = 0\)`
+
+Likewise, the probability of any individual point is 0. In a continuous space, that does not mean that an event is "impossible"!
+
+---
+
+## So how are they different?
+
+In a continuous probability space, the probability axioms are just the same as they were for discrete spaces:
+
+* Complementary probabilities add to 1  
+* The probability of a pairwise disjoint union of events is the sum of the probabilities of the individual events  
+* etc.  
+
+What is different is that the probability function is *not* determined by the probabilities of individual outcomes, which typically are all 0.
+---
+## Continuous Random Variables 
+
+**Recap:** The definition of a random variable is the same for continuous probability spaces as for discrete ones: A random variable just associates a number to every outcome in the sample space.  
+.pull-left[
+For a *discrete* random variable, the PMF: 
+`\(P_X(x)=P(X=x)\)`  
+Making the CDF `\(F_X\)` defined as:  
+`\(F_X(x) = P(X \le x)\)` 
+
+For *continuous random variables*, the CDF still makes sense, and has the same
+definition, but the PMF gives no information—it typically assigns probability 0 to
+every real number! What replaces the PMF in the continuous case—the **probability density function (PDF)**.
+]
+.pull-right[
+Referring back to the spinner example, if we plot the CDF of the outcomes:  
+.center[![](images/cdf-spinner.png)]
+]
+---
+
+## PDF
+
+&gt; The density function is the derivative of the cumulative distribution function. It is defined by: 
+.center[
+`\(f_X(a)=F'_X(a)\)`
+]
+
+If you turn things around, the CDF can be recovered by integrating the PDF:
+.center[
+`\(F_X(a)=\int_{-\infty}^x f_X(t)dt.\)` 
+]
+
+.pull-left[
+The PDF satisfies the following properties:  
+* `\(f_X(x) \ge 0\)` for all `\(x \in \mathbf{R}\)`  
+* `\(\int_{-\infty}^\infty f_X(t)dt = 1\)`  
+
+These are just like the properties of a PMF, except that the discrete sum is replaced
+by an integral. Just as we can define discrete random variables by giving the PMF,
+we can define a continuous random variable by giving a function that satisfies the
+two properties above.
+]
+.pull-right[
+The PDF of the random variable given the outcome of a spinner is shown below. Observe the CDF is not differential at x=0 and x=1 so the PDF is not defined at these points. Observe the 2 properties of a PDF are satisfied-the graph never drops below the x-axis and the area between the x-axis and the graph is 1.
+.center[![](images/pdf-spin.png)]
+]
+---
+
+## Expected Value of a Continuous Random Variable
+
+The definition of expected value resembles that of the expected value of a discrete random variable, but we replace the PMF by the PDF, and summation by
+integration. So we have  
+.center[
+`\(E(X)=\int_{-\infty}^\infty xf_X(x)dx\)`
+]
+
+Once again, we have the linearity property (expected value of a sum of random
+variables is the sum of the expected values).
+
+**Example.** A single spinner. Since `\(f_X(x)=0\)` outside the interval between 0 and 1, and `\(f_X(x)=1\)` is in the interval, we have
+.center[
+`\(E(X)=\int_{-\infty}^\infty xf_X(x)dx = \int_{0}^1 xdx = x^2/2|_{0}^1 = 1/2\)`
+]
+
+This is exactly what you would expect—if you spin the spinner a bunch of times, the values of the spins should average to `\(1/2\)`!
+---
+class: inverse center middle
+
+# Variance, Chebyshev's Inequality &amp; Law of Large Numbers
+---
+## Variance
+
+&gt; The variance and standard deviation of a random variable measure how much
+the value of a random variable is likely to deviate from its mean–how ‘spread out’
+it is.
+
+**Variance**: If `\(X\)` is a random variable with `\(\mu = E(X)\)`, then  `\(Var(X) = E((X-\mu)^2)\)`   
+**Standard Deviation**: `\(\sigma(X) = \sqrt{Var(X)}\)`  
+  
+Three important properties:
+1. Because of linearity of expectation, we can derive `\(E(X)\)` to get a more simpler equation:
+`\(Var(x) = E((X-\mu)^2) = E(X^2-2\mu X +\mu^2) = E(X^2) - 2\mu E(X) + \mu^2 = E(X^2) - 2E(X)^2 + E(X)^2\)`  
+.center[
+`\(= E(X^2) - E(X)^2\)`
+]
+2. If `\(c\)` is a constant then, `\(Var(cX) = c^2Var(x)\)`  
+3. Suppose `\(X,Y\)` are independent random variables. As we've seen this implies that `\(E(XY)=E(X)E(Y)\)`. By a similar derivation (using linearity of expectation), `\(Var(X+Y) = Var(x) + Var(Y)\)`
+---
+
+## Chebyshev's Inequality
+
+&gt; `\(P(|X-\mu| &gt; t \cdot \sigma(Y)) \le \frac{1}{t^2}\)` for any random variable X for which the variance is defined, and any `\(t&gt;0\)`
+
+*Chebyshev’s inequality* tells us, for example, that the probability that a random variable differs by more than 3 standard deviations from its mean is no more than 1/9.
+
+.pull-left[**Example**. Let’s roll a single die and let X be the outcome. Then `\(E(X) = 3.5\)` and `\(Var(X)\)` is:
+
+
+`\(E(X^2) = \frac{1}{6}(1^2 + 2^2 + 3^2 + 4^2 + 5^2 + 6^2) = \frac{91}{6}\)`  
+`\(Var(X)=\frac{91}{6} - 3.5^2 \approx 2.92\)`  
+`\(\sigma(X) \approx 1.71\)`
+
+But, what if we rolled the die *100 times*?  
+Now,
+`\(E(Y) = 350\)`, `\(Var(Y) = 292\)`, and `\(\sigma(Y) \approx 17.1\)`  
+Now, we have
+`\(50 \approx 2.92 \cdot \sigma(Y)\)` so,
+]
+.pull-right[
+`\(P(300 \le Y \le 400) = P(|Y-\mu| \le 50)\)`  
+`\(= P(|Y-\mu| \le 2.92 \cdot \sigma(Y))\)`  
+`\(= 1- P(|Y-\mu| &gt; 2.92 \cdot \sigma(Y))\)`  
+`\(\ge 1-1/2.92^2\)`  
+`\(\approx 0.88\)`
+
+This tells us that there’s at least an *88% probability* that Y will be between 300 and 400.
+]
+---
+
+## Law of Large Numbers
+
+Let's continue from the previous example. If we roll the die `\(n\)` times and let `\(X\)` be the sum, then the standard deviation is about `\(1.71 \sqrt{n}\)` and so,
+.pull-left[
+
+`\(P(3n \le X \le 4n) = P(|X-\mu| \le n/2)\)`  
+`\(= P(|X-\mu| \le \frac{\sqrt{n}}{3.42} \cdot \sigma(X))\)`  
+`\(= 1- P(|X-\mu| &gt; \frac{\sqrt{n}}{3.42} \cdot \sigma(X))\)`  
+`\(\ge 1- \frac{3.42^2}{n}\)`  
+
+This obviously approaches 1 as a limit as the number of tosses gets larger. It’s
+also obvious that there is nothing special about `\(3n\)` and `\(4n\)`; any pair of bounds
+symmetrically spaced about the mean `\(3.5n\)` would give the same result in the limit.
+]
+.pull-right[
+**Weak law of large numbers:**  
+
+`\(\displaystyle\lim_{n \to \infty} P(|Y_n-\sigma|&gt; \epsilon) = 0\)`; where `\(\epsilon=\)`any pos. num.
+
+In terms of complementary probability:
+
+`\(\displaystyle\lim_{n \to \infty} (\mu-\epsilon \le Y_n \le \mu + \epsilon) = 1\)`  
+
+It tells us that the value `\(Y_n\)` approaches `\(\mu\)` ‘in probability’: However small a deviation `\(\epsilon\)` from the mean `\(\mu\)` you name, if you perform the experiment often enough, the probability that its average
+value differs by as much as `\(\epsilon\)` from the mean is vanishingly small.
+]
+---
+class: inverse center middle
+
+## Normal Distribution &amp; CLT
+
+---
+## The Normal Distribution
+
+&gt; The function `\(\phi\)` is called the *standard normal density*. 'Standard' here mearning that is has mean 0 and standard deviation 1. 
+.center[
+`\(\phi(x) = \frac{1}{\sqrt{2\pi}} \cdot e^{-x^2/2}\)`
+]
+
+Fun fact, the famous 'bell curve' represents a continuous probability density that is a limiting case of the binomial distribution ass `\(n\)` grows large.  
+![](images/norm-binom.png) ![](images/norm-binom2.png) ![](images/norm-binom3.png) ![](images/norm-binom4.png)
+
+The corresponding CDF: `\(\Phi(x)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^x e^{-t^2/2}dt.\)`  
+Since this is very difficulty to evaluate analytically, it can be approximated using `norm.cdf(x)` from `scipy.stats`
+---
+
+## Normal Approximation to Binomial Dist.
+
+&gt; The binomial distribution, adjusted to have mean 0 and standard deviation 1, is closely approximated by the normal distribution, especially as `\(n\)` gets larger. The general principle is that: 
+
+.center[
+`\(P(a \le \frac{S_{n,p} - np}{\sqrt{np(1-p)}} \le b) \approx \Phi(b) - \Phi(a)\)`
+]
+
+**Example.** Using the normal approx. to the binomial distribution, estimate the probability that that a fair coin tossed 100 times comes up heads between 45 and 55 times, inclusive. 
+
+- The first consideration is that `\(S_{n,p}\)` is a discrete random variable that only takes integer values. The probability `\(P(45 \le S_{100,.5} \le 55)\)` is equivalent to `\(P(44.5 \le S_{100,.5} \le 55.5)\)`. Using the latter will give us the best results. 
+
+.pull-left[
+`\(P(44.5 \le S_{100,.5} \le 55.5) = P(\frac{44.5-50}{\sqrt{100 \times 0.25}} \le \frac{S_{100,p}-50}{\sqrt{100 \times 0.25}} \le \frac{55.5-50}{\sqrt{100 \times 0.25}})\)`  
+`\(= P(-1.1 \le \frac{S_{100,p}-50}{\sqrt{100 \times 0.25}} \le 1.1\)`  
+`\(\approx \Phi(1.1) - \Phi(-1.1)\)`  
+`\(= 0.728668\)`
+]
+.pull-right[
+&lt;/br&gt;
+&lt;/br&gt;
+Because of the symmetry in the event, this could have also been evaluated as:
+`\(1 -2 \cdot \Phi(-1.1)\)`
+
+]
+
+---
+
+## Central Limit Theorem
+
+&gt; Let `\(X\)` be a random variable for which `\(µ = E(X)\)` and `\(σ^2 = Var(X)\)` are defined. Let `\(X1, . . . , X_n\)` be mutually independent random variables, each with the same distribution as `\(X\)`. Think of this as making n independent repetitions of an experiment whose outcome is modeled by the random variable `\(X\)`. Our claim is that the sum of the `\(X_i\)` is approximately normally distributed. Again we adjust the mean and standard deviation to be 0 and 1; then the precise statement is  
+.center[
+`\(\displaystyle\lim_{n \to \infty} P(a&lt; \frac{X_!+\cdots X_n - n\mu}{\sigma\sqrt{n}} &lt;b) = \Phi(b) - \Phi(a)\)`
+]
+
+*Note*: The Law of Large Numbers told us that the deviation of the average of `\(n\)` independent identical random variables from its mean approaches 0 as `\(n\)` grows larger. The Central Limit Theorem says more: it tells us how that deviation is distributed.
+.pull-left[
+**Example.** Roll a die a large `\(N\)` number of times. Let `\(A_N\)` be the average roll. What is the probability that `\(A_N\)` is between 3 and 4? `\(P(3&lt;A_N&lt;4)\)`  
+Remember for a single roll, `\(\mu =3.5\)`, `\(Var=2.91\)`, `\(\sigma = 1.708\)`. (`scipy.norm.cdf` to compute `\(\Phi\)`)
+]
+.pull-right[
+`\(= P(3N &lt;S_N&lt;N)\)`  
+`\(= P(\frac{-0.5N}{1.708\sqrt{N}} &lt; \frac{S_N-3.5N}{1.708\sqrt{N}} &lt; \frac{0.5N}{1.708\sqrt{N}})\)`  
+`\(\approx \Phi(\frac{0.5N}{1.708\sqrt{N}}) - \Phi(\frac{-0.5N}{1.708\sqrt{N}})\)`  
+`\(= 1- 2\Phi(\frac{0.5N}{1.708\sqrt{N}}) = 1-2\Phi(-0.292\sqrt{N}) \approx 0.85_{N=25}\)` 
+
+]
+---
+class: inverse center middle
+
+## Hypothesis Testing
+
+---
+
+## Hypothesis Testing
+
+The basic framework for a binary discrete-type observation: 
+.center[![](images/hyp.png)]
+
+**Example.** Results of a CAT scan (system). In this scenario, the hypotheses would be `\(H_1\)`: a tumor is present; `\(H_0\)`: no tumor is present. The observed data is modeled by a discrete-type random variable `\(X\)`. Suppose if hypothesis `\(H_1\)` is true, then `\(X\)` has a pmf `\(p_1\)` and if hypothesis `\(H_0\)` is true, then `\(X\)` has pmf `\(p_0\)`. The table below shows the corresponding likelihood matrix:
+.center[![](images/hyp-matrix.png)]
+
+A *decision rule* specifies what which hypothesis is to be declared for each possible value of `\(X\)`. The table below shows where `\(H_1\)` is declared when the rule is `\(X \ge 1\)`
+
+.center[![](images/hyp-matrix2.png)]
+---
+
+## Hypothesis Testing (cont.)
+
+There are 4 possible outcomes in hypothesis testing:  
+* `\(H_0\)` is true and `\(H_0\)` is declared = *true negative*
+* `\(H_1\)` is true and `\(H_1\)` is declared = *true positive*
+* `\(H_0\)` is true and `\(H_1\)` is declared = *false positive* a.k.a *Type I error* 
+  * define by: `\(p_{FP} = P(declare H_1|H_0)\)`
+* `\(H_1\)` is true and `\(H_0\)` is declared = *false negative* a.k.a *Type II error*
+  * define by: `\(p_{FN} = P(declare H_0|H_1)\)`
+
+
+---
+## Estimation 
+
+* Estimation is how we attempt to obtain the value of an unknown population parameter 
+* Procedure:
+  * select a random sample from the population(s) of interest.
+  * calculate the point estimate of the parameter we wish to estimate (i.e. mean of x). The notation of point estimate is designated by 'hat' like, `\(\hat{\theta}, \hat{\mu}\)`
+  * estimate the variability of the point estimate (standard error)
+
+Note: a point estimate is itself a random variable.
+
+.pull-left[
+**Example.** `\(X\)` ~ `\(N(\mu, \sigma)\)`  
+`\(\hat\mu = \overline{x} = \sum\limits_{i=1}^n x_i/n\)`  
+`\(\hat\mu\)` ~ `\(N(\mu, \sigma/\sqrt{n})\)` where `\(\mu\)` is the true mean &amp; `\(\sigma/\sqrt{n}\)` is the true standard deviation of `\(\hat\mu = \overline{x}\)`
+]
+.pull-right[
+![](images/norm-dist.png)
+]
+
+---
+
+## Confidence Intervals (CI)
+&gt; A 95% CI means that in repeated samples, ther is a 95% probability the CI contain the true parameter of interest. the CI is a range of values for a population paparemeter with a level of confidence attached. The level of confidence is similar to probability. The CI starts with the point estimate and builds in the *margin of error*. The margin of error inforporates the confidence level (chosen by investigator) and the sampling variability or standard error of the point estimate.
+
+Suppose we want to generate a CI estimate for an unknown population mean. Remember, CI is *point estimate* +- *margin of error* (MoE), or `\(\overline{X}\)` +- *MoE*. Thus, for a 95% CI,
+.center[
+`\(P(\overline{X} - MoE &lt; \mu &lt; \overline{X} + MoE)\)`
+]
+.pull-left[
+Recall, the Central Limit Theorem (CLT), stated for large samples the dist. of the sample means is approximately normal with `\(\mu_{\overline{X}}=\mu\)` and `\(\sigma_{\overline{X}}=\frac{\sigma}{\sqrt{n}}\)`. We can use the CLT to derive the MoE. For std. normal dist, the following is true: `\(P(-1.96&lt;z&lt;1.96)=0.95\)`, i.e. there is a 95% chance that a std. normal var (z) will fall between -1.96 and 1.96
+]
+.pull-right[
+Also, according to CLT, `\(z = \frac{\overline{X}-\mu}{\sigma/\sqrt{n}}\)`. If we make the substitution,    
+`\(P(-1.96&lt;\frac{\overline{X}-\mu}{\sigma/\sqrt{n}}&lt;1.96) = 0.95\)`  
+`\(P(-1.96\frac{\sigma}{\sqrt{n}} &lt;\overline{X} - \mu&lt; 1.96\frac{\sigma}{\sqrt{n}}) = 0.95\)`  
+`\(P(\overline{X}-1.96\frac{\sigma}{\sqrt{n}} &lt; \mu &lt; \overline{X}+1.96\frac{\sigma}{\sqrt{n}} = 0.95\)`
+]
+---
+
+## p-value
+
+&gt; The p-value is the probability of observing a test statistic more extreme in the direction of the alternative hypothesis as the one you observed, given `\(H_0\)` (null) is true.
+
+.pull-left[
+![](images/p-val.png)
+]
+.pull-right[
+Note: If the distribution shows in the distribution of the test statistic under the null hypothesis, the green area is the p-value corresponding to a one sided alternative. The p-value would be double the area in green if the alternative were two sided.
+]
+
+---
+
+## The Whole Picture
+
+The NCHS report indicated that in 2002, Americans paid an average of 3302 per year on healthcare and prescription drugs. We hypothesize that in 2005, expenditures are lower primarily due to availability of generic drugs. To test the hypothesis, a sample of 100 people are selected and their expenditures measured. The sample data are summarized as follows: `\(n=100,\overline{X}=3190\)`, and `\(s=890\)`. Is there statistcal evidence of a reduction in expenditure in 2005? We run the test using a 5-step approach:
+
+.pull-left[
+1. Set up hypotheses and level of significance:  
+`\(H_0:\mu=3302\)`,  
+`\(H_1:\mu&lt;3302\)`,  
+`\(\alpha=0.05\)`
+
+2. Select appropriate test statistic:  
+Because sample size is large (&gt;30), the appropriate test is  
+`\(z = \frac{\overline{X}-\mu}{\sigma/\sqrt{n}}\)`
+]
+.pull-right[
+3.Set up decision rule: this is a lower-tailed test so the appropriate critical value can be found on the table. 
+.pull-left[Reject `$$H_0$$` if `$$z \le -1.645$$` 
+]
+.pull-right[
+![](images/z-score.png)
+]  
+4.Compute test-statistic:  
+`\(z = \frac{\overline{X}-\mu}{\sigma/\sqrt{n}}= \frac{3190-3302}{890/\sqrt{100}}=-1.26 &gt; -1.645 \rightarrow\)` 5. `\(H_0\)`
+]
+
+
+---
+## Resources
+
+* Grinstead, C. M. &amp; Snell, J. L. (1997). Introduction to probability. Providence, RI: American Mathematical Society. Book can be downloaded at: https://chance.dartmouth.edu/teaching_aids/books_articles/probability_book/book.html 
+* Hajek, B. (2013). Probability with engineering applications. Book can be downloaded at: https://hajek.ece.illinois.edu/ECE313Notes.html
+* [CSCI2244 - Randomness &amp; Computation](http://www.cs.bc.edu/~straubin/csci2244-2019/syllabus.html) at Boston College
+* Sullivan, L. M. (2018). Essentials of biostatistics in public health.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9",
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
