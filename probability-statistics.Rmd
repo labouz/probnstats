@@ -951,9 +951,240 @@ $= E(X^2) - E(X)^2$
 
 ## Chebyshev's Inequality
 
+> $P(|X-\mu| > t \cdot \sigma(Y)) \le \frac{1}{t^2}$ for any random variable X for which the variance is defined, and any $t>0$
+
+*Chebyshev’s inequality* tells us, for example, that the probability that a random variable differs by more than 3 standard deviations from its mean is no more than 1/9.
+
+.pull-left[**Example**. Let’s roll a single die and let X be the outcome. Then $E(X) = 3.5$ and $Var(X)$ is:
+
+
+$E(X^2) = \frac{1}{6}(1^2 + 2^2 + 3^2 + 4^2 + 5^2 + 6^2) = \frac{91}{6}$  
+$Var(X)=\frac{91}{6} - 3.5^2 \approx 2.92$  
+$\sigma(X) \approx 1.71$
+
+But, what if we rolled the die *100 times*?  
+Now,
+$E(Y) = 350$, $Var(Y) = 292$, and $\sigma(Y) \approx 17.1$  
+Now, we have
+$50 \approx 2.92 \cdot \sigma(Y)$ so,
+]
+.pull-right[
+$P(300 \le Y \le 400) = P(|Y-\mu| \le 50)$  
+$= P(|Y-\mu| \le 2.92 \cdot \sigma(Y))$  
+$= 1- P(|Y-\mu| > 2.92 \cdot \sigma(Y))$  
+$\ge 1-1/2.92^2$  
+$\approx 0.88$
+
+This tells us that there’s at least an *88% probability* that Y will be between 300 and 400.
+]
+---
+
+## Law of Large Numbers
+
+Let's continue from the previous example. If we roll the die $n$ times and let $X$ be the sum, then the standard deviation is about $1.71 \sqrt{n}$ and so,
+.pull-left[
+
+$P(3n \le X \le 4n) = P(|X-\mu| \le n/2)$  
+$= P(|X-\mu| \le \frac{\sqrt{n}}{3.42} \cdot \sigma(X))$  
+$= 1- P(|X-\mu| > \frac{\sqrt{n}}{3.42} \cdot \sigma(X))$  
+$\ge 1- \frac{3.42^2}{n}$  
+
+This obviously approaches 1 as a limit as the number of tosses gets larger. It’s
+also obvious that there is nothing special about $3n$ and $4n$; any pair of bounds
+symmetrically spaced about the mean $3.5n$ would give the same result in the limit.
+]
+.pull-right[
+**Weak law of large numbers:**  
+
+$\displaystyle\lim_{n \to \infty} P(|Y_n-\sigma|> \epsilon) = 0$; where $\epsilon=$any pos. num.
+
+In terms of complementary probability:
+
+$\displaystyle\lim_{n \to \infty} (\mu-\epsilon \le Y_n \le \mu + \epsilon) = 1$  
+
+It tells us that the value $Y_n$ approaches $\mu$ ‘in probability’: However small a deviation $\epsilon$ from the mean $\mu$ you name, if you perform the experiment often enough, the probability that its average
+value differs by as much as $\epsilon$ from the mean is vanishingly small.
+]
+---
+class: inverse center middle
+
+## Normal Distribution & CLT
+
+---
+## The Normal Distribution
+
+> The function $\phi$ is called the *standard normal density*. 'Standard' here mearning that is has mean 0 and standard deviation 1. 
+.center[
+$\phi(x) = \frac{1}{\sqrt{2\pi}} \cdot e^{-x^2/2}$
+]
+
+Fun fact, the famous 'bell curve' represents a continuous probability density that is a limiting case of the binomial distribution ass $n$ grows large.  
+![](images/norm-binom.png) ![](images/norm-binom2.png) ![](images/norm-binom3.png) ![](images/norm-binom4.png)
+
+The corresponding CDF: $\Phi(x)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^x e^{-t^2/2}dt.$  
+Since this is very difficulty to evaluate analytically, it can be approximated using `norm.cdf(x)` from `scipy.stats`
+---
+
+## Normal Approximation to Binomial Dist.
+
+> The binomial distribution, adjusted to have mean 0 and standard deviation 1, is closely approximated by the normal distribution, especially as $n$ gets larger. The general principle is that: 
+
+.center[
+$P(a \le \frac{S_{n,p} - np}{\sqrt{np(1-p)}} \le b) \approx \Phi(b) - \Phi(a)$
+]
+
+**Example.** Using the normal approx. to the binomial distribution, estimate the probability that that a fair coin tossed 100 times comes up heads between 45 and 55 times, inclusive. 
+
+- The first consideration is that $S_{n,p}$ is a discrete random variable that only takes integer values. The probability $P(45 \le S_{100,.5} \le 55)$ is equivalent to $P(44.5 \le S_{100,.5} \le 55.5)$. Using the latter will give us the best results. 
+
+.pull-left[
+$P(44.5 \le S_{100,.5} \le 55.5) = P(\frac{44.5-50}{\sqrt{100 \times 0.25}} \le \frac{S_{100,p}-50}{\sqrt{100 \times 0.25}} \le \frac{55.5-50}{\sqrt{100 \times 0.25}})$  
+$= P(-1.1 \le \frac{S_{100,p}-50}{\sqrt{100 \times 0.25}} \le 1.1$  
+$\approx \Phi(1.1) - \Phi(-1.1)$  
+$= 0.728668$
+]
+.pull-right[
+</br>
+</br>
+Because of the symmetry in the event, this could have also been evaluated as:
+$1 -2 \cdot \Phi(-1.1)$
+
+]
 
 ---
 
+## Central Limit Theorem
+
+> Let $X$ be a random variable for which $µ = E(X)$ and $σ^2 = Var(X)$ are defined. Let $X1, . . . , X_n$ be mutually independent random variables, each with the same distribution as $X$. Think of this as making n independent repetitions of an experiment whose outcome is modeled by the random variable $X$. Our claim is that the sum of the $X_i$ is approximately normally distributed. Again we adjust the mean and standard deviation to be 0 and 1; then the precise statement is  
+.center[
+$\displaystyle\lim_{n \to \infty} P(a< \frac{X_!+\cdots X_n - n\mu}{\sigma\sqrt{n}} <b) = \Phi(b) - \Phi(a)$
+]
+
+*Note*: The Law of Large Numbers told us that the deviation of the average of $n$ independent identical random variables from its mean approaches 0 as $n$ grows larger. The Central Limit Theorem says more: it tells us how that deviation is distributed.
+.pull-left[
+**Example.** Roll a die a large $N$ number of times. Let $A_N$ be the average roll. What is the probability that $A_N$ is between 3 and 4? $P(3<A_N<4)$  
+Remember for a single roll, $\mu =3.5$, $Var=2.91$, $\sigma = 1.708$. (`scipy.norm.cdf` to compute $\Phi$)
+]
+.pull-right[
+$= P(3N <S_N<N)$  
+$= P(\frac{-0.5N}{1.708\sqrt{N}} < \frac{S_N-3.5N}{1.708\sqrt{N}} < \frac{0.5N}{1.708\sqrt{N}})$  
+$\approx \Phi(\frac{0.5N}{1.708\sqrt{N}}) - \Phi(\frac{-0.5N}{1.708\sqrt{N}})$  
+$= 1- 2\Phi(\frac{0.5N}{1.708\sqrt{N}}) = 1-2\Phi(-0.292\sqrt{N}) \approx 0.85_{N=25}$ 
+
+]
+---
+class: inverse center middle
+
+## Hypothesis Testing
+
+---
+
+## Hypothesis Testing
+
+The basic framework for a binary discrete-type observation: 
+.center[![](images/hyp.png)]
+
+**Example.** Results of a CAT scan (system). In this scenario, the hypotheses would be $H_1$: a tumor is present; $H_0$: no tumor is present. The observed data is modeled by a discrete-type random variable $X$. Suppose if hypothesis $H_1$ is true, then $X$ has a pmf $p_1$ and if hypothesis $H_0$ is true, then $X$ has pmf $p_0$. The table below shows the corresponding likelihood matrix:
+.center[![](images/hyp-matrix.png)]
+
+A *decision rule* specifies what which hypothesis is to be declared for each possible value of $X$. The table below shows where $H_1$ is declared when the rule is $X \ge 1$
+
+.center[![](images/hyp-matrix2.png)]
+---
+
+## Hypothesis Testing (cont.)
+
+There are 4 possible outcomes in hypothesis testing:  
+* $H_0$ is true and $H_0$ is declared = *true negative*
+* $H_1$ is true and $H_1$ is declared = *true positive*
+* $H_0$ is true and $H_1$ is declared = *false positive* a.k.a *Type I error* 
+  * define by: $p_{FP} = P(declare H_1|H_0)$
+* $H_1$ is true and $H_0$ is declared = *false negative* a.k.a *Type II error*
+  * define by: $p_{FN} = P(declare H_0|H_1)$
+
+
+---
+## Estimation 
+
+* Estimation is how we attempt to obtain the value of an unknown population parameter 
+* Procedure:
+  * select a random sample from the population(s) of interest.
+  * calculate the point estimate of the parameter we wish to estimate (i.e. mean of x). The notation of point estimate is designated by 'hat' like, $\hat{\theta}, \hat{\mu}$
+  * estimate the variability of the point estimate (standard error)
+
+Note: a point estimate is itself a random variable.
+
+.pull-left[
+**Example.** $X$ ~ $N(\mu, \sigma)$  
+$\hat\mu = \overline{x} = \sum\limits_{i=1}^n x_i/n$  
+$\hat\mu$ ~ $N(\mu, \sigma/\sqrt{n})$ where $\mu$ is the true mean & $\sigma/\sqrt{n}$ is the true standard deviation of $\hat\mu = \overline{x}$
+]
+.pull-right[
+![](images/norm-dist.png)
+]
+
+---
+
+## Confidence Intervals (CI)
+> A 95% CI means that in repeated samples, ther is a 95% probability the CI contain the true parameter of interest. the CI is a range of values for a population paparemeter with a level of confidence attached. The level of confidence is similar to probability. The CI starts with the point estimate and builds in the *margin of error*. The margin of error inforporates the confidence level (chosen by investigator) and the sampling variability or standard error of the point estimate.
+
+Suppose we want to generate a CI estimate for an unknown population mean. Remember, CI is *point estimate* +- *margin of error* (MoE), or $\overline{X}$ +- *MoE*. Thus, for a 95% CI,
+.center[
+$P(\overline{X} - MoE < \mu < \overline{X} + MoE)$
+]
+.pull-left[
+Recall, the Central Limit Theorem (CLT), stated for large samples the dist. of the sample means is approximately normal with $\mu_{\overline{X}}=\mu$ and $\sigma_{\overline{X}}=\frac{\sigma}{\sqrt{n}}$. We can use the CLT to derive the MoE. For std. normal dist, the following is true: $P(-1.96<z<1.96)=0.95$, i.e. there is a 95% chance that a std. normal var (z) will fall between -1.96 and 1.96
+]
+.pull-right[
+Also, according to CLT, $z = \frac{\overline{X}-\mu}{\sigma/\sqrt{n}}$. If we make the substitution,    
+$P(-1.96<\frac{\overline{X}-\mu}{\sigma/\sqrt{n}}<1.96) = 0.95$  
+$P(-1.96\frac{\sigma}{\sqrt{n}} <\overline{X} - \mu< 1.96\frac{\sigma}{\sqrt{n}}) = 0.95$  
+$P(\overline{X}-1.96\frac{\sigma}{\sqrt{n}} < \mu < \overline{X}+1.96\frac{\sigma}{\sqrt{n}} = 0.95$
+]
+---
+
+## p-value
+
+> The p-value is the probability of observing a test statistic more extreme in the direction of the alternative hypothesis as the one you observed, given $H_0$ (null) is true.
+
+.pull-left[
+![](images/p-val.png)
+]
+.pull-right[
+Note: If the distribution shows in the distribution of the test statistic under the null hypothesis, the green area is the p-value corresponding to a one sided alternative. The p-value would be double the area in green if the alternative were two sided.
+]
+
+---
+
+## The Whole Picture
+
+The NCHS report indicated that in 2002, Americans paid an average of 3302 per year on healthcare and prescription drugs. We hypothesize that in 2005, expenditures are lower primarily due to availability of generic drugs. To test the hypothesis, a sample of 100 people are selected and their expenditures measured. The sample data are summarized as follows: $n=100,\overline{X}=3190$, and $s=890$. Is there statistcal evidence of a reduction in expenditure in 2005? We run the test using a 5-step approach:
+
+.pull-left[
+1. Set up hypotheses and level of significance:  
+$H_0:\mu=3302$,  
+$H_1:\mu<3302$,  
+$\alpha=0.05$
+
+2. Select appropriate test statistic:  
+Because sample size is large (>30), the appropriate test is  
+$z = \frac{\overline{X}-\mu}{\sigma/\sqrt{n}}$
+]
+.pull-right[
+3.Set up decision rule: this is a lower-tailed test so the appropriate critical value can be found on the table. 
+.pull-left[Reject $$H_0$$ if $$z \le -1.645$$ 
+]
+.pull-right[
+![](images/z-score.png)
+]  
+4.Compute test-statistic:  
+$z = \frac{\overline{X}-\mu}{\sigma/\sqrt{n}}= \frac{3190-3302}{890/\sqrt{100}}=-1.26 > -1.645 \rightarrow$ 5. $H_0$
+]
+
+
+---
 ## Resources
 
 * Grinstead, C. M. & Snell, J. L. (1997). Introduction to probability. Providence, RI: American Mathematical Society. Book can be downloaded at: https://chance.dartmouth.edu/teaching_aids/books_articles/probability_book/book.html 
+* Hajek, B. (2013). Probability with engineering applications. Book can be downloaded at: https://hajek.ece.illinois.edu/ECE313Notes.html
+* [CSCI2244 - Randomness & Computation](http://www.cs.bc.edu/~straubin/csci2244-2019/syllabus.html) at Boston College
