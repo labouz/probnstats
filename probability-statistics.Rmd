@@ -825,35 +825,132 @@ class: inverse center middle
 
 ---
 
-## What does 'probability 0' meann?
+## What does 'probability 0' mean?
 
 **Example.** A spinner. 
 
----
-## Central Limit Theorem
+.left-column[
+![](images/spinner.png)
+![](images/spinner-2.png)
+]
+
+The points on the circumference of the circle are labeled by the half-open interval $S=\{x \in \mathbf{R}:0 \le x <1 \}$. This set can be denoted by $[0,1)$. You can think of the spinner as a continuous analogue of a die: the outcomes are somehow 'equally likely'. This experiment is simulated by a call to the random number generator `rand()`.  
+
+For example: $E=\{x \in \mathbf{R}:0.5 \le x \le 0.75 \}=[0.5,0.75]$ as depicted in the bottom left figure has probability $0.25$, since it occupies exactly 1/4 of the circumference.  
+
+By the same reasoning, we can say the probability of the half-open interval $[0.5,0.75]$, which is obtained by removing the point $0.75$, is $0.25$. Thus because the union is disjoint: 
+
+
+$0.25 = P([0.5,0.75])$  
+$= P([0.5,0.75) \cup \{0.75\})$  
+$= P([0.5,0.75)) + P(\{0.75\})$ 
+$= 0.25 + P(\{0.75\})$  
+This implies $P(\{0.75\}) = 0$
+
+Likewise, the probability of any individual point is 0. In a continuous space, that does not mean that an event is "impossible"!
 
 ---
-exclude: `r if (requireNamespace("tibble", quietly=TRUE)) "false" else "true"`
 
-```{r eval=requireNamespace("tibble", quietly=TRUE)}
-tibble::as_tibble(mtcars)
-```
+## So how are they different?
 
+In a continuous probability space, the probability axioms are just the same as they were for discrete spaces:
+
+* Complementary probabilities add to 1  
+* The probability of a pairwise disjoint union of events is the sum of the probabilities of the individual events  
+* etc.  
+
+What is different is that the probability function is *not* determined by the probabilities of individual outcomes, which typically are all 0.
+---
+## Continuous Random Variables 
+
+**Recap:** The definition of a random variable is the same for continuous probability spaces as for discrete ones: A random variable just associates a number to every outcome in the sample space.  
+.pull-left[
+For a *discrete* random variable, the PMF: 
+$P_X(x)=P(X=x)$  
+Making the CDF $F_X$ defined as:  
+$F_X(x) = P(X \le x)$ 
+
+For *continuous random variables*, the CDF still makes sense, and has the same
+definition, but the PMF gives no information—it typically assigns probability 0 to
+every real number! What replaces the PMF in the continuous case—the **probability density function (PDF)**.
+]
+.pull-right[
+Referring back to the spinner example, if we plot the CDF of the outcomes:  
+.center[![](images/cdf-spinner.png)]
+]
 ---
 
-## Confidence Intervals
+## PDF
 
-```{r}
-knitr::kable(head(mtcars), format = 'html')
-```
+> The density function is the derivative of the cumulative distribution function. It is defined by: 
+.center[
+$f_X(a)=F'_X(a)$
+]
 
+If you turn things around, the CDF can be recovered by integrating the PDF:
+.center[
+$F_X(a)=\int_{-\infty}^x f_X(t)dt.$ 
+]
+
+.pull-left[
+The PDF satisfies the following properties:  
+* $f_X(x) \ge 0$ for all $x \in \mathbf{R}$  
+* $\int_{-\infty}^\infty f_X(t)dt = 1$  
+
+These are just like the properties of a PMF, except that the discrete sum is replaced
+by an integral. Just as we can define discrete random variables by giving the PMF,
+we can define a continuous random variable by giving a function that satisfies the
+two properties above.
+]
+.pull-right[
+The PDF of the random variable given the outcome of a spinner is shown below. Observe the CDF is not differential at x=0 and x=1 so the PDF is not defined at these points. Observe the 2 properties of a PDF are satisfied-the graph never drops below the x-axis and the area between the x-axis and the graph is 1.
+.center[![](images/pdf-spin.png)]
+]
 ---
 
-## Hypothesis Testing
+## Expected Value of a Continuous Random Variable
 
-```{r eval=requireNamespace("DT", quietly=TRUE)}
-DT::datatable(head(mtcars), fillContainer = FALSE, options = list(pageLength = 4))
-```
+The definition of expected value resembles that of the expected value of a discrete random variable, but we replace the PMF by the PDF, and summation by
+integration. So we have  
+.center[
+$E(X)=\int_{-\infty}^\infty xf_X(x)dx$
+]
+
+Once again, we have the linearity property (expected value of a sum of random
+variables is the sum of the expected values).
+
+**Example.** A single spinner. Since $f_X(x)=0$ outside the interval between 0 and 1, and $f_X(x)=1$ is in the interval, we have
+.center[
+$E(X)=\int_{-\infty}^\infty xf_X(x)dx = \int_{0}^1 xdx = x^2/2|_{0}^1 = 1/2$
+]
+
+This is exactly what you would expect—if you spin the spinner a bunch of times, the values of the spins should average to $1/2$!
+---
+class: inverse center middle
+
+# Variance, Chebyshev's Inequality & Law of Large Numbers
+---
+## Variance
+
+> The variance and standard deviation of a random variable measure how much
+the value of a random variable is likely to deviate from its mean–how ‘spread out’
+it is.
+
+**Variance**: If $X$ is a random variable with $\mu = E(X)$, then  $Var(X) = E((X-\mu)^2)$   
+**Standard Deviation**: $\sigma(X) = \sqrt{Var(X)}$  
+  
+Three important properties:
+1. Because of linearity of expectation, we can derive $E(X)$ to get a more simpler equation:
+$Var(x) = E((X-\mu)^2) = E(X^2-2\mu X +\mu^2) = E(X^2) - 2\mu E(X) + \mu^2 = E(X^2) - 2E(X)^2 + E(X)^2$  
+.center[
+$= E(X^2) - E(X)^2$
+]
+2. If $c$ is a constant then, $Var(cX) = c^2Var(x)$  
+3. Suppose $X,Y$ are independent random variables. As we've seen this implies that $E(XY)=E(X)E(Y)$. By a similar derivation (using linearity of expectation), $Var(X+Y) = Var(x) + Var(Y)$
+---
+
+## Chebyshev's Inequality
+
 
 ---
 
