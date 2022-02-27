@@ -1,7 +1,6 @@
 ---
 title: "Intro to Probability & Statistics"
 subtitle: "DSCI 501 - Winter 2022"  
-author: "Layla Bouzoubaa"
 date: '`r Sys.Date()`'
 output:
   xaringan::moon_reader:
@@ -58,7 +57,7 @@ style_duo_accent(
 ---
 class: inverse center middle
 
-## Probaility
+## Probability
 
 ---
 ## Probability Spaces
@@ -84,7 +83,7 @@ class: inverse center middle
 * Continuous space = *infinite* number of items in the space  
 .center[**Example 5:** Given we have a 2x2 sample space, what are the odds we throw a dart and it lands on (1,1)?  
 ![](images/cont-space.png)  
-There are an infinite number of spaces the dart could land on. The odds of it landing on *exactly* (1,1) is zero (see [Zeno's Paradox](https://blogs.unimelb.edu.au/sciencecommunication/2017/10/22/zenos-paradox-the-puzzle-that-keeps-on-giving/)). However, the continuous space for the dart hitting anywhere on the board is : $S = \{(x,y)\} \in R \times R: x \times y \le 2$]
+There are an infinite number of spaces the dart could land on. The odds of it landing on *exactly* (1,1) is zero (see [Zeno's Paradox](https://blogs.unimelb.edu.au/sciencecommunication/2017/10/22/zenos-paradox-the-puzzle-that-keeps-on-giving/)). However, the continuous space for the dart hitting anywhere on the board is : $S = \{(x,y)\} \in R \times R: x \times y < 4$]
 
 ---
 ## Probability Functions
@@ -146,7 +145,9 @@ $P(E_1 \cap E_2)=9/36=1/4=1/2 \cdot 1/2 = P(E_1)\cdot P(E_2)$
 So, the events are *independent*
 ]
 ]
+
 .pull-right[
+
 ```
 # simulate N rolls of a pair of standard 
 # dice and find the number of times 
@@ -168,6 +169,7 @@ def dice(N):
             y=(j,k)
             print(y,':',d[y])
 ```
+
 ]
 ---
 ## Probability Examples - Beans
@@ -183,6 +185,7 @@ $P(E)=|E|/S = 6/27 = 0.2222$
 $S = 300 \times 299 \times 298$  
 $P(E) = 6 \times 10^6 / (300 \times 299 \times 298) = 0.2245$
 ]
+
 .pull-right[
 
 ```
@@ -206,6 +209,7 @@ def bean_sim(b,numtrials,repl=True):
     return count/numtrials
 
 ```
+
 ]
 ---
 class: inverse center middle
@@ -238,21 +242,28 @@ class: inverse center middle
 ## Representing Tree Diagram of Probabilities
 
 Suppose the restaurant in the previous example wants to find the probability a customer chooses meat given they know the percentages of other choices?
+
 --
+
 .pull-left[
 
 | Symbol      | Meaning                                   |
 |:------------|:------------------------------------------|
-| $\Omega$    | The sample space - the set of all possible outcomes|
-| $\omega$    | An outcome. A sample point in the sample space |
-| $\omega_j$  | Finite number of outcomes in the sample space |
-| $m(\omega_j)$| The *distribution function*. Each outcome $\omega_j$ is a assigned a nonnegative number $m(\omega_j)$ in such a way that $m(\omega_1)+m(\omega_2)+\cdots + m(\omega_j) = 1$ |
+| $$\Omega$$    | The sample space - the set of all possible outcomes|
+| $$\omega$$    | An outcome. A sample point in the sample space |
+| $$\omega_j$$  | Finite number of outcomes in the sample space |
+| $$m(\omega_j)$$| The *distribution function*. Each outcome $\omega_j$ is a assigned a nonnegative number $m(\omega_j)$ in such a way that $m(\omega_1)+m(\omega_2)+\cdots + m(\omega_j) = 1$ |
+
+
 ]
 
 --
 
 .pull-right[
-![](images/menu-prob.png)]
+
+![](images/menu-prob.png)
+
+]
 
 ---
 ## Representing Tree Diagram of Probabilities
@@ -302,13 +313,15 @@ To solve this, let's order the people from 1 to *k*. First, let's find the proba
 * For each possible birthday in the sequence, there is one less available date so, for #2 = 364
 * Person #3 = 363, etc.
 * What is the sample space? 
-$|S| = 365^30, |E| = 365 \times \cdots 336$
+$|S| = 365^{30}, |E| = 365 \times \cdots 336$
 ]
 .pull-right[
+
 Therefore, the probability that all 30 people have different birthdays is 
 
 .center[
 $P(E) = \frac{|E|}{|S|}= \frac{365}{365}\cdot \frac{364}{365}\cdots \frac{336}{365} = \frac{365 \cdot 364 \cdots (365-k+1)}{365^k}$
+
 ]
 
 Then, the probability that there are two people with the same birthday is just the probability of the *complementary* event,
@@ -317,89 +330,11 @@ Then, the probability that there are two people with the same birthday is just t
 $1 -P(E) \approx 0.71$
 ]
 
-This problem can also be solved the an *exponential approximation*...
-]
----
-## Exponential Approximation
+<!-- This problem can also be solved the an *exponential approximation*... -->
 
-> The tangent line to the equation $y=e^x$ at $x=0$ is $y=1+x$. For small values of $x$, positive or negative, $1+x$ is a good approximation to $e^x$, and vice-versa
-
-</br>
-.center[![](images/exp.png)]
-
-
----
-
-## Exponential Approximation - Birthday Edition
-
-Previously, we saw that the probability of no two people out of *k* having the same birthday as: $\frac{365 \cdot 364 \cdots (365-k+1)}{365^k}$
-
-This can be rewritten using exponential approximation:  
-.center[
-$(1-\frac{1}{365}) \cdot (1-\frac{2}{365}) \cdots (1-\frac{k-1}{365})$  
-$< e^\frac{-1}{365} \cdots e^{-(k-1)/365}$  
-$= e^{-(1+2+\cdots+(k-1))/365}$  
-$= e^{-k(k-1)/(2\cdot 365)}$  
-$< e^{-(k-1)^2 / 730}$
-]
-
-Note, that as the value of *k* gets larger, the probability gets smaller. Let's say we want to find at what point it falls below 0.1, meaning the probability that at least 2 people having the same birthday is 90%. To do this we can solve:
-
-.center[
-$e^{-(k-1)^2 / 730} = 0.1$  
-Take reciprocals: $e^{(k-1)^2 / 730} = 10$  
-Take natural log: $\frac{(k-1)^2}{730}=ln 10$  
-Thus, $k=1+\sqrt{730 \cdot ln10} \approx 41$ people
 ]
 ---
 
-## Birthday Edition - the Code:
-
-.pull-left[
-```
-#birthday plots
-
-from pylab import *
-
-def exact():
-    vals=[1]
-    prod =1
-    #No need to go higher than 70 people
-    for k in range(1,71):  
-        prod *= (365-k)/365
-        vals=concatenate((vals,[prod]))
-    plot(arange(1,72),1-vals,label='exact')
-    xlabel("Number of people.")
-```
-]
-.pull-right[
-```
-# compute and plot the same thing with 
-# the exponential approximation
-def approximate():
-  vals=array([1])
-  prod =1
-  for k in range(1,71):  
-      prod *= exp(-k/365)
-      vals=concatenate((vals,[prod]))
-  plot(arange(1,72),1-vals,
-    label='1-exp(-k(k-1)/(2X365))')
-  xlabel("Number of people.")
-
-def do_both():
-    exact()
-    title("Probability of 
-      coincidental birhday (exact).")
-    show()
-    approximate()
-    title("Proability of 
-    coincidental birthday (approximate).")
-    show()
-
-```
-]
-
----
 ## Binomial Coefficients
 
 > The number of k-element subsets of an n-element set (when $0 \le k \le n$), "n choose k";  
@@ -547,6 +482,7 @@ For discrete random variables, the CDF is a step function as shown below for the
 ## Simulating the roll of 2 dice - code
 
 .pull-left[
+
 ```
 # Compute probabilites for the roll of 2
 # dice. The value returned is an array of
@@ -563,9 +499,11 @@ def dice_frequencies():
     h=histogram(t,bins=arange(1.5,13,1))
     return h[0]
 ```
+
 ]
 
 .pull-right[
+
 ```
 # Use the cumulative distribution
 # function to simulate 100,000 samples 
@@ -642,8 +580,11 @@ $P_X(k)=(1-p)^{k-1}p$
 **Example.** $X$ is the number of flips of a biased coin with heads probability $p$ until heads appears. For instance, $X=1$ if the first toss is heads, $X=3$ if the first two are tails and the third is heads. Note that this has a nonzero value at all posisive integers $k$.
 
 .center[
+
 ![](images/geom-dist.png)
+
 ]
+
 ---
 
 ## Poisson Distribution
@@ -875,8 +816,12 @@ definition, but the PMF gives no information—it typically assigns probability 
 every real number! What replaces the PMF in the continuous case—the **probability density function (PDF)**.
 ]
 .pull-right[
+
 Referring back to the spinner example, if we plot the CDF of the outcomes:  
-.center[![](images/cdf-spinner.png)]
+.center[
+![](images/cdf-spinner.png)
+]
+
 ]
 ---
 
